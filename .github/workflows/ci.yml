@@ -63,7 +63,7 @@ jobs:
       working-directory: native
 
     - name: build
-      run: cmake --build build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake --build build
       working-directory: native
 
 
@@ -71,4 +71,4 @@ jobs:
       name: Collect Artifacts
       with:
         name: drop
-        path: native/build/
+        path: native/build/${{env.BUILD_TYPE}}/
