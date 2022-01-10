@@ -1,6 +1,6 @@
 ﻿{
   "configurations": [
-   {
+    {
       "name": "debug",
       "generator": "Ninja",
       "configurationType": "Debug",
@@ -11,13 +11,13 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
-         {
-            "name": "VCPKG_TARGET_TRIPLET",
-            "value": "x64-windows-static",
-            "type": "STRING"
-         }
+        {
+          "name": "VCPKG_TARGET_TRIPLET",
+          "value": "x64-windows-static",
+          "type": "STRING"
+        }
       ]
-   },
+    },
     {
       "name": "release",
       "generator": "Ninja",
@@ -35,6 +35,20 @@
           "type": "STRING"
         }
       ]
+    },
+    {
+      "name": "WSL-GCC-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "variables": []
     }
   ]
 }
