@@ -7,7 +7,7 @@ env:
   # Indicates the location of the vcpkg as a Git submodule of the project repository.
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   # Tells vcpkg where binary packages are stored.
-  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+  # VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
 
 on:
   push:
