@@ -43,7 +43,11 @@ jobs:
 
     - name: bootstrap vcpkg (windows)
       if: runner.os == 'Windows'
-      run: ../vcpkg/bootstrap-vcpkg.bat
+      run: vcpkg/bootstrap-vcpkg.bat
+
+    - name: bootstrap vcpkg (linux and mac)
+      if: (runner.os == 'Linux' || runner.os == 'macOS')
+      run: vcpkg/bootstrap-vcpkg.sh
 
     - name: Build
       # Build your program with the given configuration
