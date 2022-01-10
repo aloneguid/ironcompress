@@ -63,7 +63,7 @@ jobs:
       working-directory: native
 
     - name: build
-      run: cmake --build build
+      run: cmake --build build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       working-directory: native
 
 
