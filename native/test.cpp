@@ -3,17 +3,23 @@
 
 using namespace std;
 
-int main()
+bool run(int method, char* buffer, size_t buffer_length)
 {
-   char bytes[] = {'a', 'b', 'c'};
-
    int len{ 0 };
-   compress(true, 1, bytes, 3, nullptr, &len);
+   compress(true, method, buffer, buffer_length, nullptr, &len);
 
    vector<char> compressed;
    compressed.resize(len);
 
-   compress(true, 1, bytes, 3, &compressed[0], &len);
+   return compress(true, method, buffer, buffer_length, &compressed[0], &len);
+}
+
+int main()
+{
+   char bytes[] = {'a', 'b', 'c'};
+
+   run(1, bytes, 3);
+   run(2, bytes, 3);
 
    return 0;
 }
