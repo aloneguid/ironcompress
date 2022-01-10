@@ -70,5 +70,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       name: Collect Artifacts
       with:
-        name: drop
+        name: bin-${{ matrix.os }}
         path: native/build/${{env.BUILD_TYPE}}/
