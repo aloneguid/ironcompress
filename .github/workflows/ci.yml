@@ -35,6 +35,10 @@ jobs:
           - os: macos-latest
             triplet: x64-osx
     name: ${{ matrix.os }} codecs
+
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+
     steps:
       
     - uses: actions/checkout@v2
