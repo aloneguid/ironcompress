@@ -4,6 +4,10 @@ env:
   VERSION: 1.0.0
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
+  # Indicates the location of the vcpkg as a Git submodule of the project repository.
+  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+  # Tells vcpkg where binary packages are stored.
+  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
 
 on:
   push:
@@ -23,29 +27,19 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+          - os: ubuntu-latest
+            triplet: x64-linux
+          - os: macos-latest
+            triplet: x64-osx
     name: ${{ matrix.os }} codecs
     steps:
+      
     - uses: actions/checkout@v2
-
-    # Compute vcpkg triplet
-    - name: Compute vcpkg triplet
-      id: vcpkg-triplet
-      run: |
-        triplet="${{ matrix.arch }}-"
-        case ${{ runner.os }} in
-          Linux)
-            triplet+="linux"
-            ;;
-          macOS)
-            triplet+="osx"
-            ;;
-          Windows)
-            triplet+="windows-static"
-            ;;
-        esac
-        echo "::set-output name=triplet::$triplet"
-      shell: bash
+      with:
+        submodules: true
 
     - name: Install vcpkg dependencies
       run: vcpkg install snappy:${{ steps.vcpkg-triplet.outputs.triplet }}
