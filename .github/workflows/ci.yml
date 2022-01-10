@@ -43,5 +43,5 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake -B build -S . --config ${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       working-directory: native
