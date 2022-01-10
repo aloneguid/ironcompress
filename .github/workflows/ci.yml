@@ -1,0 +1,60 @@
+name: 'CI'
+
+env:
+  VERSION: 1.0.0
+  ASM_VERSION: 1.0.0
+  BUILD_TYPE: Release
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  # builds native codecs binary for all supported OSes
+  build-native:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64]
+    name: ${{ matrix.os }} codecs
+    steps:
+    - uses: actions/checkout@v2
+
+    # Compute vcpkg triplet
+    - name: Compute vcpkg triplet
+      id: vcpkg-triplet
+      run: |
+        triplet="${{ matrix.arch }}-"
+        case ${{ runner.os }} in
+          Linux)
+            triplet+="linux"
+            ;;
+          macOS)
+            triplet+="osx"
+            ;;
+          Windows)
+            triplet+="windows-static"
+            ;;
+        esac
+        echo "::set-output name=triplet::$triplet"
+      shell: bash
+
+    - name: Install vcpkg dependencies
+      run: vcpkg install snappy:${{ steps.vcpkg-triplet.outputs.triplet }}
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      working-directory: native
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      working-directory: native
