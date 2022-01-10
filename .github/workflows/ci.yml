@@ -74,4 +74,4 @@ jobs:
       name: Collect Artifacts
       with:
         name: bin-${{ matrix.os }}
-        path: native/build/${{env.BUILD_TYPE}}/
+        path: native/build/${{ matrix.cconfig }}/
