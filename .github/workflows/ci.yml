@@ -41,15 +41,19 @@ jobs:
       with:
         submodules: true
 
-    - name: bootstrap vcpkg (windows)
-      if: runner.os == 'Windows'
-      run: vcpkg/bootstrap-vcpkg.bat
+    - uses: friendlyanon/setup-vcpkg@v1
+      with: { committish: 63aa65e65b9d2c08772ea15d25fb8fdb0d32e557 }
 
-    - name: bootstrap vcpkg (linux and mac)
-      if: (runner.os == 'Linux' || runner.os == 'macOS')
-      run: vcpkg/bootstrap-vcpkg.sh
+    #- name: bootstrap vcpkg (windows)
+      #if: runner.os == 'Windows'
+      #run: vcpkg/bootstrap-vcpkg.bat
+
+    #- name: bootstrap vcpkg (linux and mac)
+      #if: (runner.os == 'Linux' || runner.os == 'macOS')
+      #run: vcpkg/bootstrap-vcpkg.sh
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+      # run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+      run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
       working-directory: native
