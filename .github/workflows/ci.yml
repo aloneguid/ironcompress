@@ -77,7 +77,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       name: Collect Artifacts
       with:
-        name: bin-${{ matrix.os }}
+        name: bin
         path: |
           native/build/${{ matrix.cconfig }}/*.dll
           native/build/*.so
