@@ -35,3 +35,5 @@
 .vs/
 out/
 *.swp
+obj/
+bin/
