@@ -134,7 +134,7 @@ jobs:
       with:
         name: managed
         path: |
-          managed/IronCompress/bin/Release/net6.0/*
+          managed/IronCompress/bin/Release/*
 
   publish:
     needs: [test-managed, build-managed]
