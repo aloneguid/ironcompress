@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronCompress", "IronCompress\IronCompress.csproj", "{AF7C1723-CED3-466B-B524-7671DF1C45B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronCompress.Test", "IronCompress.Test\IronCompress.Test.csproj", "{24CE97A1-3502-481C-AFF9-891D45B6699D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AF7C1723-CED3-466B-B524-7671DF1C45B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF7C1723-CED3-466B-B524-7671DF1C45B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF7C1723-CED3-466B-B524-7671DF1C45B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,5 +28,5 @@ extern "C"
       char* input_buffer,
       int input_buffer_size,
       char* output_buffer,
-      int* output_buffer_size);
+      int* output_buffer_size); //
 }

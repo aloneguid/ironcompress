@@ -79,6 +79,7 @@ jobs:
       with:
         name: ${{ matrix.os }}
         path: |
-          native/build/${{ matrix.cconfig }}/*.dll
-          native/build/*.so
-          native/build/*.dylib
+          native/bin/*
+          #native/build/${{ matrix.cconfig }}/*.dll
+          #native/build/*.so
+          #native/build/*.dylib

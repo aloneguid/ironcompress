@@ -37,3 +37,4 @@ out/
 *.swp
 obj/
 bin/
+.idea/
