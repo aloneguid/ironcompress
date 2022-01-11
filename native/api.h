@@ -16,7 +16,11 @@ extern "C"
    /// Encode (compress) or decompress
    /// </summary>
    /// <param name="compress">When true this is compression, otherwise decompression.</param>
-   /// <param name="codec"></param>
+   /// <param name="codec">Codec:
+   /// 1 - snappy
+   /// 2 - zstd
+   /// 3 - lzo
+   /// </param>
    /// <param name="input_buffer"></param>
    /// <param name="input_buffer_size"></param>
    /// <param name="output_buffer">If this is set to nullptr, the function sets output_buffer_size to required maximum size of the compressed data.</param>

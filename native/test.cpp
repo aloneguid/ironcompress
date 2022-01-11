@@ -20,6 +20,7 @@ int main()
 
    run(1, bytes, 3);
    run(2, bytes, 3);
+   run(3, bytes, 3);
 
    return 0;
 }

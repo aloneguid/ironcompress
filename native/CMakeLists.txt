@@ -7,13 +7,13 @@ project ("ironcompress" VERSION 0.0)
 
 find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
-#find_package(lzokay CONFIG REQUIRED)
+#find_package(lzo CONFIG REQUIRED)
 
-add_library (nironcompress SHARED "api.cpp")
+add_library (nironcompress SHARED "api.cpp" "minilzo/minilzo.c")
 set_property(TARGET nironcompress PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-add_executable(tester "api.cpp" "test.cpp")
+add_executable(tester "api.cpp" "minilzo/minilzo.c" "test.cpp")
 set_property(TARGET tester PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
