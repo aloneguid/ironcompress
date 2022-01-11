@@ -90,7 +90,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    name: native ${{ matrix.os }} lib
+    name: test on ${{ matrix.os }}
 
     steps:
 
