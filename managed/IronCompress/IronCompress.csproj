@@ -5,24 +5,23 @@
       <ImplicitUsings>enable</ImplicitUsings>
       <Nullable>enable</Nullable>
       <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-      <RootNamespace>Iron</RootNamespace>
       <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
    </PropertyGroup>
 
    <!-- native dependencies -->
    <ItemGroup Label="Native">
       <!-- Windows -->
-      <Content Include="..\..\native\out\build\windows-default\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
+      <Content Include="..\..\native\bin\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
 
       <!-- Linux -->
-      <Content Include="..\..\native\out\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
+      <Content Include="..\..\native\bin\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
 
       <!-- Mac -->
-      <Content Include="..\..\native\out\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
+      <Content Include="..\..\native\bin\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
    </ItemGroup>

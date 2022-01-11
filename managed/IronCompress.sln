@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronCompress", "IronCompress\IronCompress.csproj", "{AF7C1723-CED3-466B-B524-7671DF1C45B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IronCompress", "IronCompress\IronCompress.csproj", "{AF7C1723-CED3-466B-B524-7671DF1C45B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronCompress.Test", "IronCompress.Test\IronCompress.Test.csproj", "{24CE97A1-3502-481C-AFF9-891D45B6699D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IronCompress.Test", "IronCompress.Test\IronCompress.Test.csproj", "{24CE97A1-3502-481C-AFF9-891D45B6699D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E019ACDF-9076-45D4-AD1B-702285BD178D}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

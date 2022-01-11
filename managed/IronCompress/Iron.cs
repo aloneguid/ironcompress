@@ -1,12 +1,12 @@
 ﻿using System.Buffers;
 using System.Runtime.InteropServices;
 
-namespace Iron
+namespace IronCompress
 {
    /// <summary>
    /// Cross-platform P/Invoke wrapper as described in https://docs.microsoft.com/en-us/dotnet/standard/native-interop/cross-platform
    /// </summary>
-   public static class Compress
+   public static class Iron
    {
       const string LibName = "nironcompress";
 
@@ -18,6 +18,25 @@ namespace Iron
          int inputBufferSize,
          byte* outputBuffer,
          int* outputBufferSize);
+
+      public static byte[]? Compress(
+         Codec codec,
+         ReadOnlySpan<byte> input,
+         ArrayPool<byte> allocPool,
+         out int outputSizeRet)
+      {
+         return CompressOrDecompress(true, codec, input, allocPool, out outputSizeRet);
+      }
+
+      public static byte[]? Decompress(
+         Codec codec,
+         ReadOnlySpan<byte> input,
+         ArrayPool<byte> allocPool,
+         out int outputSizeRet)
+      {
+         return CompressOrDecompress(false, codec, input, allocPool, out outputSizeRet);
+      }
+
 
       /// <summary>
       /// Compress or decompress

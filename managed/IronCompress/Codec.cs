@@ -1,4 +1,4 @@
-﻿namespace Iron
+﻿namespace IronCompress
 {
    public enum Codec
    {
