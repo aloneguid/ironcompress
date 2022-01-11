@@ -37,7 +37,7 @@ jobs:
           - os: macos-latest
             triplet: x64-osx
             cconfig: RelWithDebInfo
-    name: ${{ matrix.os }} codecs
+    name: native ${{ matrix.os }} lib
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
@@ -84,6 +84,30 @@ jobs:
           #native/build/*.so
           #native/build/*.dylib
 
+  test-managed:
+    runs-on: ${{ matrix.os }}
+    needs: build-native
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: native ${{ matrix.os }} lib
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: native
+        path: native/bin/
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Test
+      run: dotnet test managed/IronCompress.sln
 
   build-managed:
     needs: build-native
@@ -104,3 +128,21 @@ jobs:
 
     - name: Build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=$VERSION /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
+
+    - uses: actions/upload-artifact@v2
+      name: Collect Artifacts
+      with:
+        name: managed
+        path: |
+          managed/IronCompress/bin/Release/net6.0/*
+
+  publish:
+    needs: [test-managed, build-managed]
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: managed
+          path: pub/managed/
+
