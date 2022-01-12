@@ -2,7 +2,7 @@ name: 'CI'
 
 env:
   VERSION: 1.0.0
-  PACKAGE_SUFFIX: '-preview-01'
+  PACKAGE_SUFFIX: '-preview-02'
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
   # Indicates the location of the vcpkg as a Git submodule of the project repository.
