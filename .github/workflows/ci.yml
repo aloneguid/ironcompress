@@ -149,5 +149,5 @@ jobs:
           path: pub/managed/
 
       - name: push to nuget.org
-        run: dotnet nuget push pub/managed/*.*nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push pub/managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
