@@ -16,6 +16,7 @@ public class IronTest
    [InlineData(Codec.Gzip)]
    [InlineData(Codec.Brotli)]
    [InlineData(Codec.LZO)]
+   [InlineData(Codec.LZ4)]
    public void EncodeDecodeTest(Codec codec)
    {
       int minLength = RandomGenerator.GetRandomInt(10, 1000);

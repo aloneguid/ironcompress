@@ -3,6 +3,7 @@
   "version-string": "latest",
   "dependencies": [
    "snappy",
-   "zstd"
+   "zstd",
+   "lz4"
   ]
 }

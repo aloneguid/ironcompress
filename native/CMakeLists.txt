@@ -7,7 +7,7 @@ project ("ironcompress" VERSION 0.0)
 
 find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
-#find_package(lzo CONFIG REQUIRED)
+find_package(lz4 CONFIG REQUIRED)
 
 add_library (nironcompress SHARED "api.cpp" "minilzo/minilzo.c")
 set_property(TARGET nironcompress PROPERTY
@@ -25,8 +25,8 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_definitions(nironcompress PRIVATE WIN_EXPORT)
 endif()
 
-target_link_libraries(nironcompress PRIVATE Snappy::snappy zstd::libzstd_static)
-target_link_libraries(tester PRIVATE Snappy::snappy zstd::libzstd_static)
+target_link_libraries(nironcompress PRIVATE Snappy::snappy zstd::libzstd_static lz4::lz4)
+target_link_libraries(tester PRIVATE Snappy::snappy zstd::libzstd_static lz4::lz4)
 #target_link_libraries(main PRIVATE lzokay::lzokay)
 
 # https://atomheartother.github.io/c++/2018/07/12/CPPDynLib.html

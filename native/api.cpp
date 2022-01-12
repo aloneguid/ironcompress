@@ -2,6 +2,7 @@
 #include "snappy.h"
 #include "zstd.h"
 #include "minilzo/minilzo.h"
+#include "lz4.h"
 #include <string>
 #include <vector>
 //#include <iostream>
@@ -155,6 +156,41 @@ bool compress_lzo(
 }
 
 
+bool compress_lz4(
+   bool compress,
+   char* input_buffer,
+   int input_buffer_size,
+   char* output_buffer,
+   int* output_buffer_size)
+{
+   if (output_buffer == nullptr)
+   {
+      if (compress)
+      {
+         *output_buffer_size = LZ4_compressBound(input_buffer_size);
+         return true;
+      }
+      else
+      {
+         *output_buffer_size = 0;
+         return false;
+      }
+   }
+
+   if (compress)
+   {
+      *output_buffer_size = LZ4_compress_default(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
+      return *output_buffer_size != 0;
+   }
+   else
+   {
+      *output_buffer_size = LZ4_decompress_safe(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
+      return *output_buffer_size != 0;
+   }
+
+   return false;
+}
+
 bool compress(bool compress, int codec, char* input_buffer, int input_buffer_size,
    char* output_buffer, int* output_buffer_size)
 {
@@ -168,6 +204,8 @@ bool compress(bool compress, int codec, char* input_buffer, int input_buffer_siz
    // 4 - brotli
    case 5:
       return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+   case 6:
+      return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
    default:
       return false;
    }
