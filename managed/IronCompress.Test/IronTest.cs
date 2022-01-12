@@ -8,47 +8,26 @@ namespace IronCompress.Test;
 
 public class IronTest
 {
+   private static readonly Iron _iron = new Iron(ArrayPool<byte>.Shared);
+
    [Theory]
-   [InlineData(Codec.Snappy, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })]
-   [InlineData(Codec.Snappy, new byte[]
-        {
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8,
-         1, 2, 3, 4, 5, 6, 7, 8})]
-   [InlineData(Codec.Snappy, null)]
-   public void EncodeDecodeTest(Codec codec, byte[] input)
+   [InlineData(Codec.Snappy)]
+   [InlineData(Codec.Zstd)]
+   [InlineData(Codec.Gzip)]
+   [InlineData(Codec.Brotli)]
+   [InlineData(Codec.LZO)]
+   public void EncodeDecodeTest(Codec codec)
    {
-      if (input == null) input = RandomGenerator.GetRandomBytes(1000, 10000);
+      int minLength = RandomGenerator.GetRandomInt(10, 1000);
+      int maxLength = RandomGenerator.GetRandomInt(minLength, minLength + 1000);
+      byte[] input = RandomGenerator.GetRandomBytes(minLength, maxLength);
 
-      byte[]? encoded = null;
-      byte[]? decoded = null;
-
-      try
+      using (Result compressed = _iron.Compress(codec, input.AsSpan()))
       {
-         encoded = Iron.Compress(codec,
-            input,
-            ArrayPool<byte>.Shared,
-            out int encodeSize);
-
-         decoded = Iron.Decompress(codec,
-            encoded.AsSpan(0, encodeSize),
-            ArrayPool<byte>.Shared,
-            out int decodeSize);
-
-         Assert.Equal(input.Length, decodeSize);
-
-      }
-      finally
-      {
-         if (encoded != null)
-            ArrayPool<byte>.Shared.Return(encoded);
-
-         if (decoded != null)
-            ArrayPool<byte>.Shared.Return(decoded);
+         using (Result uncompressed = _iron.Decompress(codec, compressed, input.Length))
+         {
+            Assert.Equal(input, uncompressed.AsSpan().ToArray());
+         }
       }
    }
 }

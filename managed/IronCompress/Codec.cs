@@ -3,6 +3,9 @@
    public enum Codec
    {
       Snappy = 1,
-      Zstd = 2
+      Zstd = 2,
+      Gzip = 3,
+      Brotli = 4,
+      LZO = 5
    }
 }

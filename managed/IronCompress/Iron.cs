@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 
 namespace IronCompress
@@ -6,9 +7,15 @@ namespace IronCompress
    /// <summary>
    /// Cross-platform P/Invoke wrapper as described in https://docs.microsoft.com/en-us/dotnet/standard/native-interop/cross-platform
    /// </summary>
-   public static class Iron
+   public class Iron
    {
       const string LibName = "nironcompress";
+      private readonly ArrayPool<byte> _allocPool;
+
+      public Iron(ArrayPool<byte> allocPool = null)
+      {
+         _allocPool = allocPool;
+      }
 
       [DllImport(LibName)]
       static extern unsafe bool compress(
@@ -19,22 +26,20 @@ namespace IronCompress
          byte* outputBuffer,
          int* outputBufferSize);
 
-      public static byte[]? Compress(
+      public Result Compress(
          Codec codec,
          ReadOnlySpan<byte> input,
-         ArrayPool<byte> allocPool,
-         out int outputSizeRet)
+         int? outputLength = null)
       {
-         return CompressOrDecompress(true, codec, input, allocPool, out outputSizeRet);
+         return CompressOrDecompress(true, codec, input, outputLength);
       }
 
-      public static byte[]? Decompress(
+      public Result Decompress(
          Codec codec,
          ReadOnlySpan<byte> input,
-         ArrayPool<byte> allocPool,
-         out int outputSizeRet)
+         int? outputLength = null)
       {
-         return CompressOrDecompress(false, codec, input, allocPool, out outputSizeRet);
+         return CompressOrDecompress(false, codec, input, outputLength);
       }
 
 
@@ -44,45 +49,148 @@ namespace IronCompress
       /// <param name="compressOrDecompress">When true, compresses, otherwise decompresses</param>
       /// <param name="codec">Compression codec</param>
       /// <param name="input">Input data</param>
-      /// <param name="allocPool">Byte pool allocator</param>
-      /// <param name="outputSizeRet">Size of result data. Due to usage of byte pool, the resulting buffer size may (and mostly will) be larger than result data size. You can convert this to Span and return data to pool later.</param>
       /// <returns></returns>
-      public static byte[]? CompressOrDecompress(
+      public Result CompressOrDecompress(
          bool compressOrDecompress,
          Codec codec,
          ReadOnlySpan<byte> input,
-         ArrayPool<byte> allocPool,
-         out int outputSizeRet)
+         int? outputLength = null)
       {
-         int outputSize = 0;
+
+         byte[] result;
+
+         switch(codec)
+         {
+            case Codec.Gzip:
+               result = compressOrDecompress
+                  ? Gzip(input)
+                  : Ungzip(input);
+               return new Result(result, -1, null);
+
+
+            case Codec.Brotli:
+               result = compressOrDecompress
+                  ? BrotliCompress(input)
+                  : BrotliUncompress(input);
+               return new Result(result, -1, null);
+         }
+
+         int len = 0;
 
          unsafe
          {
             fixed (byte* inputPtr = input)
             {
-               bool ok = compress(
-                  compressOrDecompress,
-                  (int)codec, inputPtr, input.Length, null, &outputSize);
-               if (!ok)
+               // get output buffer size into "len"
+               if (outputLength == null)
                {
-                  outputSizeRet = 0;
-                  return null;
+                  bool ok = compress(
+                     compressOrDecompress,
+                     (int)codec, inputPtr, input.Length, null, &len);
+                  if (!ok)
+                  {
+                     throw new InvalidOperationException($"unable to detect result length");
+                  }
+               }
+               else
+               {
+                  len = outputLength.Value;
                }
 
-               byte[]? output = allocPool.Rent(outputSize);
-               //outputSize = output.Length;
+               byte[] output = _allocPool == null
+                  ?  new byte[len]
+                  : _allocPool.Rent(len);
 
                fixed (byte* outputPtr = output)
                {
-                  ok = compress(
-                     compressOrDecompress,
-                     (int)codec, inputPtr, input.Length, outputPtr, &outputSize);
+                  try
+                  {
+                     bool ok = compress(
+                        compressOrDecompress,
+                        (int)codec, inputPtr, input.Length, outputPtr, &len);
 
-                  outputSizeRet = outputSize;
-                  return output;
+                     if (!ok)
+                     {
+                        throw new InvalidOperationException($"compression failure");
+                     }
+
+                     return new Result(output, len, _allocPool);
+                  }
+                  catch
+                  {
+                     if(_allocPool != null)
+                     {
+                        _allocPool.Return(output);
+                     }
+                     throw;
+                  }
                }
             }
          }
       }
+
+      private static byte[] Gzip(ReadOnlySpan<byte> data)
+      {
+         using (var compressedStream = new MemoryStream())
+         {
+            using (var zipStream = new GZipStream(compressedStream, CompressionLevel.SmallestSize))
+            {
+               zipStream.Write(data);
+               zipStream.Flush();
+               zipStream.Close();
+               return compressedStream.ToArray();
+            }
+         }
+      }
+
+      private static byte[] BrotliCompress(ReadOnlySpan<byte> data)
+      {
+         using (var compressedStream = new MemoryStream())
+         {
+            using (var zipStream = new BrotliStream(compressedStream, CompressionLevel.SmallestSize))
+            {
+               zipStream.Write(data);
+               zipStream.Flush();
+               zipStream.Close();
+               return compressedStream.ToArray();
+            }
+         }
+      }
+
+      private static byte[] Ungzip(ReadOnlySpan<byte> data)
+      {
+         using (var compressedStream = new MemoryStream())
+         {
+            compressedStream.Write(data);
+            compressedStream.Position = 0;
+            using (var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+            {
+               using (var resultStream = new MemoryStream())
+               {
+                  zipStream.CopyTo(resultStream);
+                  return resultStream.ToArray();
+               }
+            }
+         }
+      }
+
+      private static byte[] BrotliUncompress(ReadOnlySpan<byte> data)
+      {
+         using (var compressedStream = new MemoryStream())
+         {
+            compressedStream.Write(data);
+            compressedStream.Position = 0;
+            using (var zipStream = new BrotliStream(compressedStream, CompressionMode.Decompress))
+            {
+               using (var resultStream = new MemoryStream())
+               {
+                  zipStream.CopyTo(resultStream);
+                  return resultStream.ToArray();
+               }
+            }
+         }
+      }
+
+      //
    }
 }

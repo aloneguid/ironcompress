@@ -1,5 +1,8 @@
 # IronCompress
 
+<img src="managed/IronCompress/icon.png" width=80 height=80 align="left"/> .NET buffer compression library supporting all the most popular compression algorithms like gzip, snappy, brotli, zstd,  etc. See the [latest documentation](https://www.aloneguid.uk/projects/ironcompress/) for up to date specifications. This page is only hosting source code.
+
+You will need more or less recent C++ compiler, CMake and .NET 6 to build the code.
 
 
 ## Building

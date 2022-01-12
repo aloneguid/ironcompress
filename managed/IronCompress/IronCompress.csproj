@@ -3,10 +3,28 @@
    <PropertyGroup>
       <TargetFramework>net6.0</TargetFramework>
       <ImplicitUsings>enable</ImplicitUsings>
-      <Nullable>enable</Nullable>
       <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
       <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+      <Authors>Ivan Gavryliuk</Authors>
+      <Company>Ivan Gavryliuk</Company>
+      <Description>Buffer compresison library supporting all the major compression algorithms (gzip, brotli, snappy, zstd etc.)</Description>
+      <PackageProjectUrl>https://www.aloneguid.uk/projects/ironcompress/</PackageProjectUrl>
+      <PackageIcon>icon.png</PackageIcon>
+      <RepositoryUrl>https://github.com/aloneguid/ironcompress</RepositoryUrl>
+      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+      <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
    </PropertyGroup>
+
+   <ItemGroup>
+      <None Include="icon.png" Pack="True" PackagePath="\" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+   </ItemGroup>
 
    <!-- native dependencies -->
    <ItemGroup Label="Native">

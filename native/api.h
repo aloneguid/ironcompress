@@ -19,7 +19,8 @@ extern "C"
    /// <param name="codec">Codec:
    /// 1 - snappy
    /// 2 - zstd
-   /// 3 - lzo
+   /// 5 - lzo - in progress
+   /// 4 - lz4 - todo
    /// </param>
    /// <param name="input_buffer"></param>
    /// <param name="input_buffer_size"></param>

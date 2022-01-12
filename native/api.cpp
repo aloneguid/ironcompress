@@ -4,6 +4,7 @@
 #include "minilzo/minilzo.h"
 #include <string>
 #include <vector>
+//#include <iostream>
 
 using namespace std;
 
@@ -94,6 +95,8 @@ bool compress_lzo(
 
    if (!lzo_initialised)
    {
+      //cout << "lzo init" << endl;
+
       if (lzo_init() == LZO_E_OK)
       {
          lzo_initialised = true;
@@ -116,6 +119,8 @@ bool compress_lzo(
       }
       else
       {
+         // there is no way to estimate LZO buffer size, so we will just return immediately with false result.
+         // One need to define their own framing format to store size, but that's not our aim.
          return false;
       }
 
@@ -135,6 +140,16 @@ bool compress_lzo(
 
       return r == LZO_E_OK;
    }
+   else
+   {
+      lzo_uint len{ 0 };
+      int r = lzo1x_decompress(
+         (unsigned char*)input_buffer, input_buffer_size,
+         (unsigned char*)output_buffer, &len,
+         nullptr);
+
+      return r == LZO_E_OK;
+   }
 
    return false;
 }
@@ -149,7 +164,9 @@ bool compress(bool compress, int codec, char* input_buffer, int input_buffer_siz
       return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
    case 2:
       return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-   case 3:
+   // 3 - gzip
+   // 4 - brotli
+   case 5:
       return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
    default:
       return false;
