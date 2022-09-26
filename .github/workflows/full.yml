@@ -53,7 +53,8 @@ jobs:
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
         committish: 8e8a3d7c1a6f7f587b486663b1e814911e6f2342
-        cache: false
+        # set to false to clear any cache in case of build errors
+        #cache: false
 
     #- name: bootstrap vcpkg (windows)
       #if: runner.os == 'Windows'
