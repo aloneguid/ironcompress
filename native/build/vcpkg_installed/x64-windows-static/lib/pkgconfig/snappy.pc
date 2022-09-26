@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: snappy
+Description: A fast compressor/decompressor.
+Version: 1.1.9
+Libs: -L${libdir} -l
+Cflags: -I${includedir}

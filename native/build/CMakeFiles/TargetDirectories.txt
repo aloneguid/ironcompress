@@ -1,0 +1,4 @@
+C:/dev/ironcompress/native/build/CMakeFiles/nironcompress.dir
+C:/dev/ironcompress/native/build/CMakeFiles/tester.dir
+C:/dev/ironcompress/native/build/CMakeFiles/ALL_BUILD.dir
+C:/dev/ironcompress/native/build/CMakeFiles/ZERO_CHECK.dir
