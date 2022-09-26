@@ -50,7 +50,7 @@ jobs:
         submodules: true
 
     - uses: friendlyanon/setup-vcpkg@v1
-      with: { committish: b47d6ce6e32fb9efb76e6e7e5f9c849298f3557a }
+      #with: { committish: b47d6ce6e32fb9efb76e6e7e5f9c849298f3557a }
 
     #- name: bootstrap vcpkg (windows)
       #if: runner.os == 'Windows'
