@@ -54,7 +54,7 @@ jobs:
       with:
         committish: 8e8a3d7c1a6f7f587b486663b1e814911e6f2342
         # set to false to clear any cache in case of build errors
-        #cache: false
+        cache: false
 
     #- name: bootstrap vcpkg (windows)
       #if: runner.os == 'Windows'
