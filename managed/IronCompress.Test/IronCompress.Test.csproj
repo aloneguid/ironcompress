@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Include="..\NetBox.cs" Link="NetBox.cs" />
+        <Compile Include="..\NetBox.cs" Link="NetBox.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\IronCompress\IronCompress.csproj" />
+        <ProjectReference Include="..\IronCompress\IronCompress.csproj" />
     </ItemGroup>
 
 </Project>

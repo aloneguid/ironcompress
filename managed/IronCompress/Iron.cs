@@ -12,6 +12,12 @@ namespace IronCompress
       const string LibName = "nironcompress";
       private readonly ArrayPool<byte> _allocPool;
 
+#if NET6_0_OR_GREATER
+      private const CompressionLevel CL = CompressionLevel.SmallestSize;
+#else
+      private const CompressionLevel CL = CompressionLevel.Optimal;
+#endif
+
       public Iron(ArrayPool<byte> allocPool = null)
       {
          _allocPool = allocPool;
@@ -33,7 +39,6 @@ namespace IronCompress
       {
          return CompressOrDecompress(true, codec, input, outputLength);
       }
-
       public Result Decompress(
          Codec codec,
          ReadOnlySpan<byte> input,
@@ -133,7 +138,7 @@ namespace IronCompress
       {
          using (var compressedStream = new MemoryStream())
          {
-            using (var zipStream = new GZipStream(compressedStream, CompressionLevel.SmallestSize))
+            using (var zipStream = new GZipStream(compressedStream, CL))
             {
                zipStream.Write(data);
                zipStream.Flush();
@@ -147,7 +152,7 @@ namespace IronCompress
       {
          using (var compressedStream = new MemoryStream())
          {
-            using (var zipStream = new BrotliStream(compressedStream, CompressionLevel.SmallestSize))
+            using (var zipStream = new BrotliStream(compressedStream, CL))
             {
                zipStream.Write(data);
                zipStream.Flush();

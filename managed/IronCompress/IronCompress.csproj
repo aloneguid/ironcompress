@@ -1,48 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-   <PropertyGroup>
-      <TargetFramework>net6.0</TargetFramework>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-      <Authors>Ivan Gavryliuk</Authors>
-      <Company>Ivan Gavryliuk</Company>
-      <Description>Buffer compresison library supporting all the major compression algorithms (gzip, brotli, snappy, zstd etc.)</Description>
-      <PackageProjectUrl>https://www.aloneguid.uk/projects/ironcompress/</PackageProjectUrl>
-      <PackageIcon>icon.png</PackageIcon>
-      <RepositoryUrl>https://github.com/aloneguid/ironcompress</RepositoryUrl>
-      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-      <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-      <PackageTags>snappy zstd gzip brotli lzo lz4</PackageTags>
-   </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Authors>Ivan Gavryliuk</Authors>
+        <Company>Ivan Gavryliuk</Company>
+        <Description>Buffer compresison library supporting all the major compression algorithms (gzip, brotli, snappy, zstd etc.)</Description>
+        <PackageProjectUrl>https://www.aloneguid.uk/projects/ironcompress/</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/aloneguid/ironcompress</RepositoryUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageTags>snappy zstd gzip brotli lzo lz4</PackageTags>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-   <ItemGroup>
-      <None Include="icon.png" Pack="True" PackagePath="\" />
-   </ItemGroup>
+    <ItemGroup>
+        <None Include="icon.png" Pack="True" PackagePath="\" />
+    </ItemGroup>
 
-   <ItemGroup>
-      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-   </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
 
-   <!-- native dependencies -->
-   <ItemGroup Label="Native">
-      <!-- Windows -->
-      <Content Include="..\..\native\bin\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
-         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Buffers" Version="4.5.1" />
+    </ItemGroup>
 
-      <!-- Linux -->
-      <Content Include="..\..\native\bin\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
-         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
 
-      <!-- Mac -->
-      <Content Include="..\..\native\bin\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
-         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-   </ItemGroup>
+    <!-- native dependencies -->
+    <ItemGroup Label="Native">
+        <!-- Windows -->
+        <Content Include="..\..\native\bin\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+
+        <!-- Linux -->
+        <Content Include="..\..\native\bin\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+
+        <!-- Mac -->
+        <Content Include="..\..\native\bin\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>
