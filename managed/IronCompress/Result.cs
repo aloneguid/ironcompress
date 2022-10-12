@@ -24,10 +24,10 @@ namespace IronCompress {
 
         }
 
-        public int Length => _dataSize;
+        public int Length => _dataSize == -1 ? _data.Length : _dataSize;
 
         public Span<byte> AsSpan() =>
-           _data.AsSpan(0, _dataSize == -1 ? _data.Length : _dataSize);
+           _data.AsSpan(0, Length);
 
         public static implicit operator Span<byte>(Result r) => r.AsSpan();
 
