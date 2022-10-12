@@ -18,6 +18,10 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageTags>snappy zstd gzip brotli lzo lz4</PackageTags>
         <LangVersion>latest</LangVersion>
+        
+        <!-- Sign with a fake no password signature for convenience. Note this is not a proof of anything.-->
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../fake.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>
