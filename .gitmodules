@@ -1,0 +1,3 @@
+[submodule "minilzo"]
+	path = minilzo
+	url = https://github.com/yuhaoth/minilzo

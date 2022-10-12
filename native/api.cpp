@@ -1,7 +1,7 @@
 ﻿#include "api.h"
 #include "snappy.h"
 #include "zstd.h"
-#include "minilzo/minilzo.h"
+#include "minilzo.h"
 #include "lz4.h"
 #include <string>
 #include <vector>

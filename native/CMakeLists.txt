@@ -9,11 +9,11 @@ find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
 find_package(lz4 CONFIG REQUIRED)
 
-add_library (nironcompress SHARED "api.cpp" "minilzo/minilzo.c")
+add_library (nironcompress SHARED "api.cpp" "../minilzo/minilzo.c")
 set_property(TARGET nironcompress PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-add_executable(tester "api.cpp" "minilzo/minilzo.c" "test.cpp")
+add_executable(tester "api.cpp" "../minilzo/minilzo.c" "test.cpp")
 set_property(TARGET tester PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
@@ -29,6 +29,9 @@ target_link_libraries(nironcompress PRIVATE Snappy::snappy zstd::libzstd_static 
 target_link_libraries(tester PRIVATE Snappy::snappy zstd::libzstd_static lz4::lz4)
 #target_link_libraries(main PRIVATE lzokay::lzokay)
 
+target_include_directories(nironcompress PRIVATE "../minilzo")
+target_include_directories(tester PRIVATE "../minilzo")
+
 # https://atomheartother.github.io/c++/2018/07/12/CPPDynLib.html
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
@@ -36,7 +39,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
-message(INFO " binary dir:" ${CMAKE_BINARY_DIR})
+#message(INFO " binary dir:" ${CMAKE_BINARY_DIR})
 
 add_custom_command(
     TARGET nironcompress 
