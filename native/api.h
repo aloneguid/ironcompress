@@ -19,8 +19,10 @@ extern "C"
    /// <param name="codec">Codec:
    /// 1 - snappy
    /// 2 - zstd
-   /// 5 - lzo - in progress
-   /// 4 - lz4 - todo
+   /// 3 - not in use
+   /// 4 - not in use
+   /// 5 - lzo
+   /// 6 - lz4 
    /// </param>
    /// <param name="input_buffer"></param>
    /// <param name="input_buffer_size"></param>
@@ -33,5 +35,5 @@ extern "C"
       char* input_buffer,
       int input_buffer_size,
       char* output_buffer,
-      int* output_buffer_size); //
+      int* output_buffer_size);
 }
