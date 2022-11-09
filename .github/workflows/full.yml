@@ -134,6 +134,10 @@ jobs:
         name: native
         path: native/out/
 
+    - name: debug
+      run: ls -R
+      working-directory: native
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -155,6 +159,10 @@ jobs:
       with:
         name: native
         path: native/out/
+
+    - name: debug
+      run: ls -R
+      working-directory: native
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
