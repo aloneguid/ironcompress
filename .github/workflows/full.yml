@@ -185,6 +185,7 @@ jobs:
     needs: [test-managed, build-managed]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    environment: nuget
     steps:
 
       - uses: actions/download-artifact@v2

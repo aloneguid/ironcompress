@@ -25,6 +25,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="..\..\docs\README.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
         <None Include="icon.png" Pack="True" PackagePath="\" />
     </ItemGroup>
 
@@ -41,33 +45,29 @@
         <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
         <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
         <OSArchitecture Condition="'$(OSArchitecture)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</OSArchitecture>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <!-- native dependencies -->
     <ItemGroup Label="Native">
         <!-- Windows -->
-        <Content Include="..\..\native\out\x64-windows-static\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native"
-                 Condition="'$(IsWindows)'=='true' OR Exists('..\out\x64-windows-static\niconcompress.dll')">
+        <Content Include="..\..\native\out\x64-windows-static\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native" Condition="'$(IsWindows)'=='true' OR Exists('..\out\x64-windows-static\niconcompress.dll')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Linux -->
-        <Content Include="..\..\native\out\x64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native"
-                 Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-linux\libnironcompress.so')">
+        <Content Include="..\..\native\out\x64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-linux\libnironcompress.so')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\out\arm64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-arm64/native"
-                 Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\out\arm64-linux\libnironcompress.so')">
+        <Content Include="..\..\native\out\arm64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-arm64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\out\arm64-linux\libnironcompress.so')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Mac -->
-        <Content Include="..\..\native\out\x64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native"
-                 Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-osx\libnironcompress.dylib')">
+        <Content Include="..\..\native\out\x64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-osx\libnironcompress.dylib')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\out\arm64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native"
-                 Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\bin\arm64-osx\libnironcompress.dylib')">
+        <Content Include="..\..\native\out\arm64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\bin\arm64-osx\libnironcompress.dylib')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
