@@ -46,21 +46,21 @@ jobs:
       with:
         submodules: true
 
-    - name: var-windows
+    - name: Windows Env
       if: matrix.os == 'windows-latest'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
         echo "VCPKG_CONFIG=Release" >> $env:GITHUB_ENV
 
-    - name: var-linux
+    - name: Linux Env
       if: matrix.os == 'ubuntu-latest'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "VCPKG_CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
-    - name: var-mac
+    - name: MacOS Env
       if: matrix.os == 'macos-latest'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
@@ -73,14 +73,14 @@ jobs:
         echo "VCPKG_OPTIONS=-D CMAKE_C_FLAGS=-m32 -D CMAKE_CXX_FLAGS=-m32 -D LINK_FLAGS=-m32" >> $env:GITHUB_ENV
 
 
-    - name: Linux arm64 cross-compilation toolchain
+    - name: Linux ARM x64
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
       run: |
         sudo apt-get update
         sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
         echo "VCPKG_OPTIONS=-D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)" >> $GITHUB_ENV
 
-    - name: Mac M1 cross-compilation toolchain
+    - name: MacOS M1
       if: runner.os == 'macOS' && matrix.arch == 'arm64'
       run: |
         echo "VCPKG_OPTIONS=-D CMAKE_OSX_ARCHITECTURES=arm64" >> $GITHUB_ENV
@@ -92,17 +92,7 @@ jobs:
         # set to false to clear any cache in case of build errors
         cache: false
 
-    #- name: bootstrap vcpkg (windows)
-      #if: runner.os == 'Windows'
-      #run: vcpkg/bootstrap-vcpkg.bat
-
-    #- name: bootstrap vcpkg (linux and mac)
-      #if: (runner.os == 'Linux' || runner.os == 'macOS')
-      #run: vcpkg/bootstrap-vcpkg.sh
-
     - name: configure
-      # Build your program with the given configuration
-      # run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
       run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -D "VCPKG_TARGET_TRIPLET=${{ env.VCPKG_TRIPLET }}" ${{ env.VCPKG_OPTIONS }}
       working-directory: native
 
@@ -125,9 +115,6 @@ jobs:
         name: native
         path: |
           native/out/**/*
-          #native/build/${{ matrix.cconfig }}/*.dll
-          #native/build/*.so
-          #native/build/*.dylib
 
   test-managed:
     runs-on: ${{ matrix.os }}
