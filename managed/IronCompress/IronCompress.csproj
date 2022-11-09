@@ -40,17 +40,23 @@
     <!-- native dependencies -->
     <ItemGroup Label="Native">
         <!-- Windows -->
-        <Content Include="..\..\native\bin\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
+        <Content Include="..\..\native\out\x64-windows-static\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Linux -->
-        <Content Include="..\..\native\bin\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
+        <Content Include="..\..\native\out\x64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\..\native\out\arm64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-arm64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Mac -->
-        <Content Include="..\..\native\bin\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
+        <Content Include="..\..\native\out\x64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\..\native\out\arm64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
