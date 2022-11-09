@@ -29,28 +29,29 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64]
-        include:
-          - os: windows-latest
-            triplet: 'x64-windows-static'
-            cconfig: Release
-          #- os: ubuntu-latest
-          #  triplet: ${{ matrix.arch }}-linux
-          #  cconfig: RelWithDebInfo
-          #- os: macos-latest
-          #  triplet: ${{ matrix.arch }}-osx
-          #  cconfig: RelWithDebInfo
+        arch: [x64, arm64]
+        #include:
+        #  - os: windows-latest
+        #    triplet: ${{ matrix.arch }}-windows-static
+        #    cconfig: Release
+        #  - os: ubuntu-latest
+        #    triplet: ${{ matrix.arch }}-linux
+        #    cconfig: RelWithDebInfo
+        #  - os: macos-latest
+        #    triplet: ${{ matrix.arch }}-osx
+        #    cconfig: RelWithDebInfo
       fail-fast: false
     name: native ${{ matrix.os }} ${{ matrix.arch }} lib
-
-    env:
-      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
 
     steps:
       
     - uses: actions/checkout@v2
       with:
         submodules: true
+
+    - name: var-windows
+      if: matrix.os == 'windows-latest'
+      run: 'echo VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-windows-static'
 
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
