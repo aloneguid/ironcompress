@@ -32,7 +32,7 @@ jobs:
         arch: [x64]
         include:
           - os: windows-latest
-            triplet: ${{ matrix.arch }}x64-windows-static
+            triplet: '${{ matrix.arch }}x64-windows-static'
             cconfig: Release
           #- os: ubuntu-latest
           #  triplet: ${{ matrix.arch }}-linux
