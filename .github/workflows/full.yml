@@ -67,6 +67,12 @@ jobs:
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
         echo "VCPKG_CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
+    - name: Windows x86
+      if: runner.os == 'Windows' && matrix.arch == 'x86'
+      run: |
+        echo "VCPKG_OPTIONS=-D CMAKE_C_FLAGS=-m32 -D CMAKE_CXX_FLAGS=-m32 -D LINK_FLAGS=-m32" >> $env:GITHUB_ENV
+
+
     - name: Linux arm64 cross-compilation toolchain
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
       run: |
