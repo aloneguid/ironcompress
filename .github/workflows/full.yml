@@ -63,6 +63,13 @@ jobs:
         echo "TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
+    # Install arm64 cross-compilation toolchain if required
+    - name: Install arm64 cross-compilation toolchain
+      if: runner.os == 'Linux' && matrix.arch == 'arm64'
+      run: |
+        sudo apt-get update
+        sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
+
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
