@@ -117,7 +117,7 @@ jobs:
     - name: create target dir
       run: |
         mkdir -p native/bin/${{ env.VCPKG_TRIPLET }}
-        cp native/bin/* native/bin/${{ env.VCPKG_TRIPLET }}/
+        cp -r native/bin/* native/bin/${{ env.VCPKG_TRIPLET }}/
 
     - uses: actions/upload-artifact@v2
       name: Collect Artifacts
