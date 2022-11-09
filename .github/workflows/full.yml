@@ -51,7 +51,10 @@ jobs:
 
     - name: var-windows
       if: matrix.os == 'windows-latest'
-      run: 'echo VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-windows-static'
+      run: |
+        echo VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-windows-static >> $GITHUB_ENV
+        echo TRIPLET=${{ matrix.arch }}-windows-static >> $GITHUB_ENV
+        echo config=Release >> $GITHUB_ENV
 
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
@@ -71,11 +74,11 @@ jobs:
     - name: configure
       # Build your program with the given configuration
       # run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
-      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }}
       working-directory: native
 
     - name: build
-      run: cmake --build build --config ${{ matrix.cconfig }}
+      run: cmake --build build --config ${{ env.CONFIG }}
       working-directory: native
 
     - name: debug
