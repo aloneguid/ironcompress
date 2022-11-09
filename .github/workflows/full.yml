@@ -108,13 +108,17 @@ jobs:
       run: ls -R
       working-directory: native
 
+    - name: create target dir
+      run: |
+        mkdir -p native/bin/${{ env.VCPKG_TRIPLET }}
+        cp native/bin/* native/bin/${{ env.VCPKG_TRIPLET }}/
 
     - uses: actions/upload-artifact@v2
       name: Collect Artifacts
       with:
         name: native
         path: |
-          native/bin/*
+          native/bin/**/*
           #native/build/${{ matrix.cconfig }}/*.dll
           #native/build/*.so
           #native/build/*.dylib
