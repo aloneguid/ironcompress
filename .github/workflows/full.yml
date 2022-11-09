@@ -30,16 +30,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         arch: [x64, arm64]
-        #include:
-        #  - os: windows-latest
-        #    triplet: ${{ matrix.arch }}-windows-static
-        #    cconfig: Release
-        #  - os: ubuntu-latest
-        #    triplet: ${{ matrix.arch }}-linux
-        #    cconfig: RelWithDebInfo
-        #  - os: macos-latest
-        #    triplet: ${{ matrix.arch }}-osx
-        #    cconfig: RelWithDebInfo
       fail-fast: false
     name: native ${{ matrix.os }} ${{ matrix.arch }} lib
 
@@ -52,23 +42,23 @@ jobs:
     - name: var-windows
       if: matrix.os == 'windows-latest'
       run: |
-        echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
-        echo "TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
-        echo "CONFIG=Release" >> $env:GITHUB_ENV
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
+        echo "VCPKG_CONFIG=Release" >> $env:GITHUB_ENV
 
     - name: var-linux
       if: matrix.os == 'ubuntu-latest'
       run: |
-        echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
-        echo "TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
-        echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
+        echo "VCPKG_CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
     - name: var-mac
       if: matrix.os == 'macos-latest'
       run: |
-        echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
-        echo "TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
-        echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
+        echo "VCPKG_CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
     # Install arm64 cross-compilation toolchain if required
     - name: Install arm64 cross-compilation toolchain
@@ -80,7 +70,7 @@ jobs:
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
-        committish: 8e8a3d7c1a6f7f587b486663b1e814911e6f2342
+        committish: e79c0d2b5d72eb3063cf32a1f7de1a9cf19930f3
         # set to false to clear any cache in case of build errors
         cache: false
 
@@ -95,11 +85,11 @@ jobs:
     - name: configure
       # Build your program with the given configuration
       # run: cmake -B build -S . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
-      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }}
+      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_VCPKG_TRIPLET=${{ env.VCPKG_TRIPLET }}
       working-directory: native
 
     - name: build
-      run: cmake --build build --config ${{ env.CONFIG }}
+      run: cmake --build build --config ${{ env.VCPKG_CONFIG }}
       working-directory: native
 
     - name: debug
