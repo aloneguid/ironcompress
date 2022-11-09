@@ -34,12 +34,12 @@ jobs:
           - os: windows-latest
             triplet: ${{ matrix.arch }}x64-windows-static
             cconfig: Release
-          - os: ubuntu-latest
-            triplet: ${{ matrix.arch }}-linux
-            cconfig: RelWithDebInfo
-          - os: macos-latest
-            triplet: ${{ matrix.arch }}-osx
-            cconfig: RelWithDebInfo
+          #- os: ubuntu-latest
+          #  triplet: ${{ matrix.arch }}-linux
+          #  cconfig: RelWithDebInfo
+          #- os: macos-latest
+          #  triplet: ${{ matrix.arch }}-osx
+          #  cconfig: RelWithDebInfo
       fail-fast: false
     name: native ${{ matrix.os }} ${{ matrix.arch }} lib
 
