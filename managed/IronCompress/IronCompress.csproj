@@ -18,7 +18,7 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageTags>snappy zstd gzip brotli lzo lz4</PackageTags>
         <LangVersion>latest</LangVersion>
-        
+
         <!-- Sign with a fake no password signature for convenience. Note this is not a proof of anything.-->
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../fake.snk</AssemblyOriginatorKeyFile>
@@ -26,8 +26,8 @@
 
     <ItemGroup>
         <None Include="..\..\docs\README.md">
-          <Pack>True</Pack>
-          <PackagePath>\</PackagePath>
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
         </None>
         <None Include="icon.png" Pack="True" PackagePath="\" />
     </ItemGroup>
@@ -51,23 +51,23 @@
     <!-- native dependencies -->
     <ItemGroup Label="Native">
         <!-- Windows -->
-        <Content Include="..\..\native\out\x64-windows-static\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native" Condition="'$(IsWindows)'=='true' OR Exists('..\out\x64-windows-static\niconcompress.dll')">
+        <Content Include="..\..\native\out\x64-windows-static\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native" Condition="'$(IsWindows)'=='true' OR Exists('..\native\out\x64-windows-static\niconcompress.dll')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Linux -->
-        <Content Include="..\..\native\out\x64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-linux\libnironcompress.so')">
+        <Content Include="..\..\native\out\x64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\..\native\out\x64-linux\libnironcompress.so')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\out\arm64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-arm64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\out\arm64-linux\libnironcompress.so')">
+        <Content Include="..\..\native\out\arm64-linux\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-arm64/native" Condition="('$(IsLinux)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\..\native\out\arm64-linux\libnironcompress.so')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Mac -->
-        <Content Include="..\..\native\out\x64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\out\x64-osx\libnironcompress.dylib')">
+        <Content Include="..\..\native\out\x64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='X64') OR Exists('..\..\native\out\x64-osx\libnironcompress.dylib')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\out\arm64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\bin\arm64-osx\libnironcompress.dylib')">
+        <Content Include="..\..\native\out\arm64-osx\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native" Condition="('$(IsOSX)'=='true' AND '$(OSArchitecture)'=='Arm64') OR Exists('..\..\native\out\arm64-osx\libnironcompress.dylib')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
