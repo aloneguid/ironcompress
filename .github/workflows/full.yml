@@ -38,7 +38,7 @@ jobs:
           - os: windows-latest
             arch: arm64
       fail-fast: false
-    name: native ${{ matrix.os }} ${{ matrix.arch }} lib
+    name: ${{ matrix.os }} (${{ matrix.arch }})
 
     steps:
       
@@ -116,7 +116,7 @@ jobs:
 
     - name: create target dir
       run: |
-        mkdir -p native/bin/${{ env.VCPKG_TRIPLET }}
+        mkdir -p native/bin/${{ env.VCPKG_TRIPLET }}/
         cp -r native/bin/* native/bin/${{ env.VCPKG_TRIPLET }}/
 
     - uses: actions/upload-artifact@v2
