@@ -54,14 +54,14 @@ jobs:
       run: |
         echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-windows-static" >> $GITHUB_ENV
         echo "TRIPLET=${{ matrix.arch }}-windows-static" >> $GITHUB_ENV
-        echo "config=Release" >> $GITHUB_ENV
+        echo "CONFIG=Release" >> $GITHUB_ENV
 
     - name: var-linux
       if: matrix.os == 'ubuntu-latest'
       run: |
         echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
-        echo "config=RelWithDebInfo" >> $GITHUB_ENV
+        echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
