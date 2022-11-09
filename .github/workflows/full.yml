@@ -40,6 +40,7 @@ jobs:
           - os: macos-latest
             triplet: ${{ matrix.arch }}-osx
             cconfig: RelWithDebInfo
+      fail-fast: false
     name: native ${{ matrix.os }} ${{ matrix.arch }} lib
 
     env:
