@@ -63,6 +63,13 @@ jobs:
         echo "TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
+    - name: var-mac
+      if: matrix.os == 'macos-latest'
+      run: |
+        echo "VCPKG_DEFAULT_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
+        echo "TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
+        echo "CONFIG=RelWithDebInfo" >> $GITHUB_ENV
+
     # Install arm64 cross-compilation toolchain if required
     - name: Install arm64 cross-compilation toolchain
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
