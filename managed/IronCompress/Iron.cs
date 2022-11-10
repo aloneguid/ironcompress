@@ -34,39 +34,39 @@ namespace IronCompress {
 
 #if NETCOREAPP3_1_OR_GREATER
         private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath) {
-            if(libraryName != LibName) return IntPtr.Zero;
+            if(libraryName != LibName)
+                return IntPtr.Zero;
 
             string prefix, suffix, arch;
 
-            switch(Environment.OSVersion.Platform) {
-                case PlatformID.Win32NT:
-                    prefix = "";
-                    suffix = ".dll";
-                    arch = RuntimeInformation.ProcessArchitecture switch {
-                        Architecture.X64 => "",
-                        _ => throw new NotSupportedException("Only x64 is supported on Windows"),
-                    };
-                    break;
-                case PlatformID.Unix:
-                    prefix = "lib";
-                    suffix = ".so";
-                    arch = RuntimeInformation.ProcessArchitecture switch {
-                        Architecture.X64 => "",
-                        Architecture.Arm64 => "arm64",
-                        _ => throw new NotSupportedException("Only x64 and ARM 64 Linux is supported."),
-                    };
-                    break;
-                case PlatformID.MacOSX:
-                    prefix = "lib";
-                    suffix = ".dylib";
-                    arch = RuntimeInformation.ProcessArchitecture switch {
-                        Architecture.X64 => "",
-                        Architecture.Arm64 => "arm64",
-                        _ => throw new NotSupportedException("Only x64 and ARM 64 MacOSX is supported."),
-                    };
-                    break;
-                default:
-                    throw new NotSupportedException($"'{Environment.OSVersion.Platform}' OS is not supported");
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                prefix = "";
+                suffix = ".dll";
+                arch = RuntimeInformation.ProcessArchitecture switch {
+                    Architecture.X64 => "",
+                    _ => throw new NotSupportedException("Only x64 is supported on Windows"),
+                };
+            }
+            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                prefix = "lib";
+                suffix = ".so";
+                arch = RuntimeInformation.ProcessArchitecture switch {
+                    Architecture.X64 => "",
+                    Architecture.Arm64 => "arm64",
+                    _ => throw new NotSupportedException("Only x64 and ARM 64 Linux is supported."),
+                };
+            }
+            else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+                prefix = "lib";
+                suffix = ".dylib";
+                arch = RuntimeInformation.ProcessArchitecture switch {
+                    Architecture.X64 => "",
+                    Architecture.Arm64 => "arm64",
+                    _ => throw new NotSupportedException("Only x64 and ARM 64 MacOSX is supported."),
+                };
+            }
+            else {
+                throw new NotSupportedException($"'{Environment.OSVersion.Platform}' OS is not supported");
             }
 
             if(arch != "")
