@@ -140,6 +140,10 @@ jobs:
       fail-fast: false
     name: 'test: ${{ matrix.os }}'
 
+    env:
+      LD_DEBUG: true
+      DYLD_PRINT_LIBRARIES: true
+
     steps:
 
     - uses: actions/checkout@v3
