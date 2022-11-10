@@ -141,8 +141,8 @@ jobs:
     name: 'test: ${{ matrix.os }}'
 
     env:
-      LD_DEBUG: true
-      DYLD_PRINT_LIBRARIES: true
+      LD_DEBUG: libs
+      DYLD_PRINT_LIBRARIES: 1
 
     steps:
 
@@ -163,6 +163,13 @@ jobs:
         dotnet-version: |
           3.1.x
           6.0.x
+
+    - name: build
+      run: dotnet build managed/IronCompress.sln
+
+    - name: debug
+      run: ls -R
+      working-directory: .
 
     - name: Test
       run: dotnet test managed/IronCompress.sln
