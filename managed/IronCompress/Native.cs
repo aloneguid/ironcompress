@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
 namespace IronCompress {
     static class Native {
         const string LibName = "nironcompress";
 
+        /*
         static Native() {
 
             // lower versions will just have to rely on 64-bit only version, which is the default with no arch suffixes.
@@ -60,6 +57,7 @@ namespace IronCompress {
             return NativeLibrary.Load(nativeName, assembly, searchPath);
         }
 #endif
+        */
 
         [DllImport(LibName)]
         internal static extern unsafe bool compress(
