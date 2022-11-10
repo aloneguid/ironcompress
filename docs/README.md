@@ -2,7 +2,7 @@
 
  [![NuGet](https://img.shields.io/nuget/v/IronCompress.svg)](https://www.nuget.org/packages/IronCompress)
 
-<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for Gzip and Brotli (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](../ironsnappy/). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
+<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for Gzip and Brotli (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](https://github.com/aloneguid/IronSnappy). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
 
 The library supports the following formats:
 
@@ -61,5 +61,7 @@ You will need more or less recent C++ compiler, `CMake` and `.NET SDK 6` to buil
 
 ## Building
 
-See [workflow file](.github/workflows/ci.yml) for building instructions. To develop locally, you might want to download the latest artifact from Actions output and put it into `native/bin` so you have binaries for all platforms.
+See [workflow file](.github/workflows/ci.yml) for building instructions.
+
+Hint: To develop managed only code locally you can download the latest artifact from Actions output and put it into `native/ubin` so you have binaries for all platforms.
 

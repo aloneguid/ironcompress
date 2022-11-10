@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.IO.Compression;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace IronCompress {
@@ -16,11 +17,11 @@ namespace IronCompress {
     /// Cross-platform P/Invoke wrapper as described in https://docs.microsoft.com/en-us/dotnet/standard/native-interop/cross-platform
     /// </summary>
     public class Iron {
-        const string LibName = "nironcompress";
+
         private readonly ArrayPool<byte> _allocPool;
 
 #if NET6_0_OR_GREATER
-      private const CompressionLevel CL = CompressionLevel.SmallestSize;
+        private const CompressionLevel CL = CompressionLevel.SmallestSize;
 #else
         private const CompressionLevel CL = CompressionLevel.Optimal;
 #endif
@@ -28,15 +29,6 @@ namespace IronCompress {
         public Iron(ArrayPool<byte> allocPool = null) {
             _allocPool = allocPool;
         }
-
-        [DllImport(LibName)]
-        static extern unsafe bool compress(
-           bool compress,
-           int codec,
-           byte* inputBuffer,
-           int inputBufferSize,
-           byte* outputBuffer,
-           int* outputBufferSize);
 
         public DataBuffer Compress(
            Codec codec,
@@ -88,7 +80,7 @@ namespace IronCompress {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
                     if(outputLength == null) {
-                        bool ok = compress(
+                        bool ok = Native.compress(
                            compressOrDecompress,
                            (int)codec, inputPtr, input.Length, null, &len);
                         if(!ok) {
@@ -105,7 +97,7 @@ namespace IronCompress {
 
                     fixed(byte* outputPtr = output) {
                         try {
-                            bool ok = compress(
+                            bool ok = Native.compress(
                                compressOrDecompress,
                                (int)codec, inputPtr, input.Length, outputPtr, &len);
 
