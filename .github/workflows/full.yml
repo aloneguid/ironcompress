@@ -140,9 +140,9 @@ jobs:
       fail-fast: false
     name: 'test: ${{ matrix.os }}'
 
-    env:
-      LD_DEBUG: libs
-      DYLD_PRINT_LIBRARIES: 1
+    #env:
+    #  LD_DEBUG: libs
+    #  DYLD_PRINT_LIBRARIES: 1
 
     steps:
 
