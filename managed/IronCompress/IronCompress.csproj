@@ -44,25 +44,26 @@
     
     
     <!-- native dependencies. https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-items?view=vs-2022#content -->
+    <!-- from what I understand, the "Link" attribute is only used for ProjectReference and local development. It has zero effect on generated nuget. -->
     <ItemGroup Label="Native">
         <!-- Windows -->
-        <Content Include="..\..\native\ubin\nironcompress-x64.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
+        <Content Include="..\..\native\ubin\runtimes\win-x64\native\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Linux -->
-        <Content Include="..\..\native\ubin\libnironcompress-x64.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
+        <Content Include="..\..\native\ubin\runtimes\libnironcompress.so" Link="libnironcompress.so" PackagePath="runtimes/linux-x64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\ubin\libnironcompress-arm64.so" Link="libnironcompress-arm64.so" PackagePath="runtimes/linux-arm64/native">
+        <Content Include="..\..\native\ubin\runtimes\libnironcompress.so" PackagePath="runtimes/linux-arm64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 
         <!-- Mac -->
-        <Content Include="..\..\native\ubin\libnironcompress-x64.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
+        <Content Include="..\..\native\ubin\runtimes\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\native\ubin\libnironcompress-arm64.dylib" Link="libnironcompress-arm64.dylib" PackagePath="runtimes/osx-arm64/native">
+        <Content Include="..\..\native\ubin\runtimes\libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
