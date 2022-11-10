@@ -41,7 +41,9 @@
         <PackageReference Include="System.Buffers" Version="4.5.1" />
     </ItemGroup>
 
-    <!-- native dependencies -->
+    
+    
+    <!-- native dependencies. https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-items?view=vs-2022#content -->
     <ItemGroup Label="Native">
         <!-- Windows -->
         <Content Include="..\..\native\ubin\nironcompress-x64.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">

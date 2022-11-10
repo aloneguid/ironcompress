@@ -45,5 +45,5 @@ add_custom_command(
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:nironcompress>
-        ${CMAKE_SOURCE_DIR}/ubin/$<TARGET_FILE_PREFIX:nironcompress>$<TARGET_FILE_BASE_NAME:nironcompress>$ENV{FILE_ARCH}$<TARGET_FILE_SUFFIX:nironcompress>
+        ${CMAKE_SOURCE_DIR}/ubin/runtimes/${DOTNET_RID}/native/$<TARGET_FILE_NAME:nironcompress>
 )
