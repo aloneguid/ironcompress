@@ -39,12 +39,11 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
-#message(INFO " binary dir:" ${CMAKE_BINARY_DIR})
-
+# https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#generator-expression-reference
 add_custom_command(
     TARGET nironcompress 
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:nironcompress>
-        ${CMAKE_SOURCE_DIR}/bin/$<TARGET_FILE_NAME:nironcompress>
+        ${CMAKE_SOURCE_DIR}/ubin/$<TARGET_FILE_PREFIX:nironcompress>$<TARGET_FILE_BASE_NAME:nironcompress>$ENV{FILE_ARCH}$<TARGET_FILE_SUFFIX:nironcompress>
 )

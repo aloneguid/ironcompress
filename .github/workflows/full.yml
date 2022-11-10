@@ -1,7 +1,7 @@
 name: 'Full Flow'
 
 env:
-  VERSION: 1.2.1
+  VERSION: 1.2.2
   #PACKAGE_SUFFIX: '-preview-03'
   PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
@@ -39,6 +39,9 @@ jobs:
             arch: arm64
       fail-fast: false
     name: ${{ matrix.os }} (${{ matrix.arch }})
+
+    env:
+      FILE_ARCH: '-${{ matrix.arch }}'
 
     steps:
       
@@ -104,17 +107,12 @@ jobs:
       run: ls -R
       working-directory: native
 
-    - name: create target dir
-      run: |
-        mkdir -p native/out/${{ env.VCPKG_TRIPLET }}/
-        cp -r native/bin/* native/out/${{ env.VCPKG_TRIPLET }}/
-
     - uses: actions/upload-artifact@v2
       name: Collect Artifacts
       with:
         name: native
         path: |
-          native/out/**/*
+          native/ubin/**/*
 
   test-managed:
     runs-on: ${{ matrix.os }}
@@ -195,4 +193,13 @@ jobs:
 
       - name: push to nuget.org
         run: dotnet nuget push pub/managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: create gh release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ${{ env.VERSION }}
+          files: "pub/managed/*.nupgkg"
+          generate_release_notes: true
 
