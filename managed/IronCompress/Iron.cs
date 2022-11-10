@@ -72,7 +72,6 @@ namespace IronCompress {
             if(arch != "")
                 arch = "-" + arch;
             string nativeName = $"{prefix}{LibName}{arch}{suffix}";
-            Console.Write("REMOVE ME: " + nativeName);
             return NativeLibrary.Load(nativeName, assembly, searchPath);
         }
 #endif
