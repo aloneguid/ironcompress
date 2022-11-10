@@ -17,77 +17,18 @@ namespace IronCompress {
     /// Cross-platform P/Invoke wrapper as described in https://docs.microsoft.com/en-us/dotnet/standard/native-interop/cross-platform
     /// </summary>
     public class Iron {
-        const string LibName = "nironcompress";
+
         private readonly ArrayPool<byte> _allocPool;
 
 #if NET6_0_OR_GREATER
-      private const CompressionLevel CL = CompressionLevel.SmallestSize;
+        private const CompressionLevel CL = CompressionLevel.SmallestSize;
 #else
         private const CompressionLevel CL = CompressionLevel.Optimal;
-#endif
-
-        static Iron() {
-#if NETCOREAPP3_1_OR_GREATER
-            NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
-#endif
-        }
-
-#if NETCOREAPP3_1_OR_GREATER
-        private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath) {
-            if(libraryName != LibName)
-                return IntPtr.Zero;
-
-            string prefix, suffix, arch;
-
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                prefix = "";
-                suffix = ".dll";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    _ => throw new NotSupportedException("Only x64 is supported on Windows"),
-                };
-            }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
-                prefix = "lib";
-                suffix = ".so";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    Architecture.Arm64 => "arm64",
-                    _ => throw new NotSupportedException("Only x64 and ARM 64 Linux is supported."),
-                };
-            }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
-                prefix = "lib";
-                suffix = ".dylib";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    Architecture.Arm64 => "arm64",
-                    _ => throw new NotSupportedException("Only x64 and ARM 64 MacOSX is supported."),
-                };
-            }
-            else {
-                throw new NotSupportedException($"'{Environment.OSVersion.Platform}' OS is not supported");
-            }
-
-            if(arch != "")
-                arch = "-" + arch;
-            string nativeName = $"{prefix}{LibName}{arch}{suffix}";
-            return NativeLibrary.Load(nativeName, assembly, searchPath);
-        }
 #endif
 
         public Iron(ArrayPool<byte> allocPool = null) {
             _allocPool = allocPool;
         }
-
-        [DllImport(LibName)]
-        static extern unsafe bool compress(
-           bool compress,
-           int codec,
-           byte* inputBuffer,
-           int inputBufferSize,
-           byte* outputBuffer,
-           int* outputBufferSize);
 
         public DataBuffer Compress(
            Codec codec,
@@ -139,7 +80,7 @@ namespace IronCompress {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
                     if(outputLength == null) {
-                        bool ok = compress(
+                        bool ok = Native.compress(
                            compressOrDecompress,
                            (int)codec, inputPtr, input.Length, null, &len);
                         if(!ok) {
@@ -156,7 +97,7 @@ namespace IronCompress {
 
                     fixed(byte* outputPtr = output) {
                         try {
-                            bool ok = compress(
+                            bool ok = Native.compress(
                                compressOrDecompress,
                                (int)codec, inputPtr, input.Length, outputPtr, &len);
 
