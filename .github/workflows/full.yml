@@ -38,7 +38,7 @@ jobs:
           - os: windows-latest
             arch: arm64
       fail-fast: false
-    name: ${{ matrix.os }} (${{ matrix.arch }})
+    name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
 
     env:
       FILE_ARCH: '-${{ matrix.arch }}'
@@ -121,7 +121,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022, macos-10.15, macos-11, macos-12]
       fail-fast: false
-    name: test on ${{ matrix.os }}
+    name: 'test: ${{ matrix.os }}'
 
     steps:
 
