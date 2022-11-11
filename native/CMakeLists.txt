@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project ("ironcompress" VERSION 0.0)
 
-find_package(Snappy "1.1.9" CONFIG REQUIRED)
+find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
 find_package(lz4 CONFIG REQUIRED)
 
