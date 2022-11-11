@@ -78,6 +78,8 @@ jobs:
     - name: Windows x32
       if: runner.os == 'Windows' && matrix.arch == 'x86'
       run: |
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
         echo "DOTNET_RID=win-x32" >> $env:GITHUB_ENV
         echo "VCPKG_OPTIONS=-D CMAKE_C_FLAGS=-m32 -D CMAKE_CXX_FLAGS=-m32 -D LINK_FLAGS=-m32" >> $env:GITHUB_ENV
 

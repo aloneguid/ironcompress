@@ -39,3 +39,4 @@ obj/
 bin/
 .idea/
 build/
+vcpkg_installed/
