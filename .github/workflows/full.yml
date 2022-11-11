@@ -40,9 +40,6 @@ jobs:
       fail-fast: false
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
 
-    env:
-      FILE_ARCH: '-${{ matrix.arch }}'
-
     steps:
       
     - uses: actions/checkout@v3
@@ -80,7 +77,7 @@ jobs:
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
-        echo "DOTNET_RID=win-x32" >> $env:GITHUB_ENV
+        echo "DOTNET_RID=win-x86" >> $env:GITHUB_ENV
         echo "VCPKG_OPTIONS=-D CMAKE_C_FLAGS=-m32 -D CMAKE_CXX_FLAGS=-m32 -D LINK_FLAGS=-m32" >> $env:GITHUB_ENV
 
     - name: Linux x64
