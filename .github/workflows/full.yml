@@ -111,6 +111,10 @@ jobs:
         # set to false to clear any cache in case of build errors
         cache: false
 
+    - name: show cmake config
+      run: cmake -h
+      working-directory: native
+
     - name: configure
       run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -D "VCPKG_TARGET_TRIPLET=${{ env.VCPKG_TRIPLET }}" ${{ env.VCPKG_OPTIONS }}
       working-directory: native
