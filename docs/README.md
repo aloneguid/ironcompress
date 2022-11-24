@@ -18,10 +18,10 @@ And following architectures:
 |      | Windows     | Linux | Mac OSX |
 | ---- | ----------- | ----- | ------- |
 | x64  | ✅           | ✅     | ✅       |
-| x32  | coming soon | ⛔     | ⛔       |
+| x32  | ✅           | ⛔     | ⛔       |
 | ARM  | coming soon | ✅     | ✅       |
 
-The library periodically updates to the latest binaries. All the binaries are compiled from C/C++ source with CMake for major systems i.e. Linux, Windows and MacOSX. They are then wrapped safely with a .NET interface.
+The library periodically updates to the latest binaries. All the binaries are compiled from C/C++ source with `CMake` for major systems i.e. Linux, Windows and Mac OSX. They are then wrapped safely with a .NET interface.
 
 ## Using
 

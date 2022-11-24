@@ -30,18 +30,15 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         arch: [x64, arm64]
-        #include:
-        #  - os: windows-latest
-        #    arch: x86
+        include:
+          - os: windows-latest
+            arch: x86
         exclude:
           # no build agent for Windows ARM
           - os: windows-latest
             arch: arm64
       fail-fast: false
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
-
-    env:
-      FILE_ARCH: '-${{ matrix.arch }}'
 
     steps:
       
@@ -78,8 +75,10 @@ jobs:
     - name: Windows x32
       if: runner.os == 'Windows' && matrix.arch == 'x86'
       run: |
-        echo "DOTNET_RID=win-x32" >> $env:GITHUB_ENV
-        echo "VCPKG_OPTIONS=-D CMAKE_C_FLAGS=-m32 -D CMAKE_CXX_FLAGS=-m32 -D LINK_FLAGS=-m32" >> $env:GITHUB_ENV
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
+        echo "DOTNET_RID=win-x86" >> $env:GITHUB_ENV
+        echo "CMAKE_OPTIONS=-A Win32" >> $env:GITHUB_ENV
 
     - name: Linux x64
       if: runner.os == 'Linux' && matrix.arch == 'x64'
@@ -91,7 +90,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
-        echo "VCPKG_OPTIONS=-D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)" >> $GITHUB_ENV
+        echo "CMAKE_OPTIONS=-D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)" >> $GITHUB_ENV
         echo "DOTNET_RID=linux-arm64" >> $GITHUB_ENV
 
     - name: OSX x64
@@ -102,7 +101,7 @@ jobs:
     - name: OSX M1
       if: runner.os == 'macOS' && matrix.arch == 'arm64'
       run: |
-        echo "VCPKG_OPTIONS=-D CMAKE_OSX_ARCHITECTURES=arm64" >> $GITHUB_ENV
+        echo "CMAKE_OPTIONS=-D CMAKE_OSX_ARCHITECTURES=arm64" >> $GITHUB_ENV
         echo "DOTNET_RID=osx-arm64" >> $GITHUB_ENV
 
     - uses: friendlyanon/setup-vcpkg@v1
@@ -112,8 +111,12 @@ jobs:
         # set to false to clear any cache in case of build errors
         cache: false
 
+    - name: show cmake config
+      run: cmake -h
+      working-directory: native
+
     - name: configure
-      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -D "VCPKG_TARGET_TRIPLET=${{ env.VCPKG_TRIPLET }}" ${{ env.VCPKG_OPTIONS }}
+      run: cmake -B build -S . -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -D "VCPKG_TARGET_TRIPLET=${{ env.VCPKG_TRIPLET }}" ${{ env.CMAKE_OPTIONS }}
       working-directory: native
 
     - name: build
