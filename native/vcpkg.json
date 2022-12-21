@@ -1,9 +1,10 @@
 {
-  "name": "main",
-  "version-string": "latest",
-  "dependencies": [
-   "snappy",
-   "zstd",
-   "lz4"
-  ]
+    "name": "main",
+    "version-string": "latest",
+    "dependencies": [
+        "snappy",
+        "zstd",
+        "lz4",
+        "brotli"
+    ]
 }

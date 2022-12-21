@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -39,12 +39,14 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="System.Buffers" Version="4.5.1" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
 
     
     
     <!-- native dependencies. https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-items?view=vs-2022#content -->
     <!-- from what I understand, the "Link" attribute is only used for ProjectReference and local development. It has zero effect on generated nuget. -->
+    <!-- RIDs: https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json -->
     <ItemGroup Label="Native">
         <!-- Windows -->
         <Content Include="..\..\native\ubin\runtimes\win-x64\native\nironcompress.dll" Link="nironcompress.dll" PackagePath="runtimes/win-x64/native">

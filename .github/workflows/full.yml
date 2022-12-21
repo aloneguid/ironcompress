@@ -1,7 +1,7 @@
 name: 'Full Flow'
 
 env:
-  VERSION: 1.2.4
+  VERSION: 1.2.5
   #PACKAGE_SUFFIX: '-preview-03'
   PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
         arch: [x64, arm64]
         include:
           - os: windows-latest
@@ -54,7 +54,7 @@ jobs:
         echo "VCPKG_CONFIG=Release" >> $env:GITHUB_ENV
 
     - name: Linux Env
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-20.04'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
@@ -107,7 +107,7 @@ jobs:
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
-        committish: e79c0d2b5d72eb3063cf32a1f7de1a9cf19930f3
+        committish: e07c62d05970d7d89e336bdb278b02242e8bda7c
         # set to false to clear any cache in case of build errors
         cache: false
 
@@ -168,14 +168,14 @@ jobs:
           6.0.x
 
     - name: build
-      run: dotnet build managed/IronCompress.sln
+      run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
     - name: debug2
       run: ls -R
       working-directory: .
 
     - name: Test
-      run: dotnet test managed/IronCompress.sln
+      run: dotnet test managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
   build-managed:
     needs: build-native
