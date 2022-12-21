@@ -20,7 +20,7 @@ extern "C"
    /// 1 - snappy
    /// 2 - zstd
    /// 3 - not in use
-   /// 4 - not in use
+   /// 4 - brotli
    /// 5 - lzo
    /// 6 - lz4 
    /// </param>

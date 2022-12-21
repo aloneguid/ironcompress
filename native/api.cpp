@@ -5,6 +5,8 @@
 #include "lz4.h"
 #include <string>
 #include <vector>
+#include "brotli/encode.h"
+#include "brotli/decode.h"
 //#include <iostream>
 
 using namespace std;
@@ -54,35 +56,62 @@ bool compress_snappy(
 }
 
 bool compress_zstd(
-   bool compress,
-   char* input_buffer,
-   int input_buffer_size,
-   char* output_buffer,
-   int* output_buffer_size)
-{
-   if (output_buffer == nullptr)
-   {
-      if (compress)
-      {
-         *output_buffer_size = ZSTD_compressBound(input_buffer_size);
-      }
-      else
-      {
-         *output_buffer_size = ZSTD_getFrameContentSize(input_buffer, input_buffer_size);
-      }
-      return true;
-   }
+    bool compress,
+    char* input_buffer,
+    int input_buffer_size,
+    char* output_buffer,
+    int* output_buffer_size) {
+    if(output_buffer == nullptr) {
+        if(compress) {
+            *output_buffer_size = ZSTD_compressBound(input_buffer_size);
+        } else {
+            *output_buffer_size = ZSTD_getFrameContentSize(input_buffer, input_buffer_size);
+        }
+        return true;
+    }
 
-   if (compress)
-   {
-      *output_buffer_size = ZSTD_compress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size, ZSTD_btultra2);
-   }
-   else
-   {
-      ZSTD_decompress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size);
-   }
+    if(compress) {
+        *output_buffer_size = ZSTD_compress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size, ZSTD_btultra2);
+    } else {
+        ZSTD_decompress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size);
+    }
 
-   return true;
+    return true;
+}
+
+bool compress_brotli(
+    bool compress,
+    char* input_buffer,
+    int input_buffer_size,
+    char* output_buffer,
+    int* output_buffer_size) {
+
+    if(output_buffer == nullptr) {
+
+        if(compress) {
+            *output_buffer_size = ::BrotliEncoderMaxCompressedSize(input_buffer_size);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if(compress) {
+        size_t compressed_size;
+        auto r = ::BrotliEncoderCompress(BROTLI_MAX_QUALITY, BROTLI_DEFAULT_WINDOW, BROTLI_DEFAULT_MODE,
+            input_buffer_size, (const uint8_t*)input_buffer,
+            &compressed_size, (uint8_t*)output_buffer);
+        *output_buffer_size = compressed_size;
+        return BROTLI_TRUE == r;
+    } else {
+        if(output_buffer_size == nullptr) return false;
+
+        size_t decoded_size;
+        auto r = ::BrotliDecoderDecompress(input_buffer_size, (const uint8_t*)input_buffer,
+            &decoded_size, (uint8_t*)output_buffer);
+        *output_buffer_size = decoded_size;
+        return BROTLI_DECODER_RESULT_SUCCESS == r;
+    }
 }
 
 bool compress_lzo(
@@ -157,56 +186,47 @@ bool compress_lzo(
 
 
 bool compress_lz4(
-   bool compress,
-   char* input_buffer,
-   int input_buffer_size,
-   char* output_buffer,
-   int* output_buffer_size)
-{
-   if (output_buffer == nullptr)
-   {
-      if (compress)
-      {
-         *output_buffer_size = LZ4_compressBound(input_buffer_size);
-         return true;
-      }
-      else
-      {
-         *output_buffer_size = 0;
-         return false;
-      }
-   }
+    bool compress,
+    char* input_buffer,
+    int input_buffer_size,
+    char* output_buffer,
+    int* output_buffer_size) {
+    if(output_buffer == nullptr) {
+        if(compress) {
+            *output_buffer_size = LZ4_compressBound(input_buffer_size);
+            return true;
+        } else {
+            *output_buffer_size = 0;
+            return false;
+        }
+    }
 
-   if (compress)
-   {
-      *output_buffer_size = LZ4_compress_default(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
-      return *output_buffer_size != 0;
-   }
-   else
-   {
-      *output_buffer_size = LZ4_decompress_safe(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
-      return *output_buffer_size != 0;
-   }
+    if(compress) {
+        *output_buffer_size = LZ4_compress_default(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
+        return *output_buffer_size != 0;
+    } else {
+        *output_buffer_size = LZ4_decompress_safe(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
+        return *output_buffer_size != 0;
+    }
 
-   return false;
+    return false;
 }
 
 bool compress(bool compress, int codec, char* input_buffer, int input_buffer_size,
-   char* output_buffer, int* output_buffer_size)
-{
-   switch (codec)
-   {
-   case 1:
-      return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-   case 2:
-      return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-   // 3 - gzip
-   // 4 - brotli
-   case 5:
-      return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-   case 6:
-      return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-   default:
-      return false;
-   }
+    char* output_buffer, int* output_buffer_size) {
+    switch(codec) {
+        case 1:
+            return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+        case 2:
+            return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+            // 3 - gzip
+        case 4:
+            return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+        case 5:
+            return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+        case 6:
+            return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+        default:
+            return false;
+    }
 }
