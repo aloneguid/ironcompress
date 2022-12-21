@@ -168,14 +168,14 @@ jobs:
           6.0.x
 
     - name: build
-      run: dotnet build managed/IronCompress.sln
+      run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
     - name: debug2
       run: ls -R
       working-directory: .
 
     - name: Test
-      run: dotnet test managed/IronCompress.sln
+      run: dotnet test managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
   build-managed:
     needs: build-native
