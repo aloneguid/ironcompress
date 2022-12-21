@@ -97,7 +97,7 @@ bool compress_brotli(
     }
 
     if(compress) {
-        size_t compressed_size;
+        size_t compressed_size = *output_buffer_size;
         auto r = ::BrotliEncoderCompress(BROTLI_MAX_QUALITY, BROTLI_DEFAULT_WINDOW, BROTLI_DEFAULT_MODE,
             input_buffer_size, (const uint8_t*)input_buffer,
             &compressed_size, (uint8_t*)output_buffer);
@@ -106,7 +106,7 @@ bool compress_brotli(
     } else {
         if(output_buffer_size == nullptr) return false;
 
-        size_t decoded_size;
+        size_t decoded_size = *output_buffer_size;
         auto r = ::BrotliDecoderDecompress(input_buffer_size, (const uint8_t*)input_buffer,
             &decoded_size, (uint8_t*)output_buffer);
         *output_buffer_size = decoded_size;

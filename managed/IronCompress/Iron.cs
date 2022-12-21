@@ -67,10 +67,10 @@ namespace IronCompress {
         /// <param name="input">Input data</param>
         /// <returns></returns>
         public DataBuffer CompressOrDecompress(
-           bool compressOrDecompress,
-           Codec codec,
-           ReadOnlySpan<byte> input,
-           int? outputLength = null) {
+            bool compressOrDecompress,
+            Codec codec,
+            ReadOnlySpan<byte> input,
+            int? outputLength = null) {
 
             byte[] result;
 
