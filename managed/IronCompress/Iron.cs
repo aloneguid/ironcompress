@@ -1,7 +1,5 @@
 ﻿using System.Buffers;
 using System.IO.Compression;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace IronCompress {
     public enum Codec {
@@ -121,7 +119,12 @@ namespace IronCompress {
         private static byte[] Gzip(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
                 using(var zipStream = new GZipStream(compressedStream, CL)) {
+#if NETSTANDARD2_0
+                    byte[] tmp = data.ToArray();
+                    zipStream.Write(tmp, 0, tmp.Length);
+#else
                     zipStream.Write(data);
+#endif
                     zipStream.Flush();
                     zipStream.Close();
                     return compressedStream.ToArray();
@@ -142,7 +145,12 @@ namespace IronCompress {
 
         private static byte[] Ungzip(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
+#if NETSTANDARD2_0
+                byte[] tmp = data.ToArray();
+                compressedStream.Write(tmp, 0, tmp.Length);
+#else
                 compressedStream.Write(data);
+#endif
                 compressedStream.Position = 0;
                 using(var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress)) {
                     using(var resultStream = new MemoryStream()) {
@@ -155,7 +163,12 @@ namespace IronCompress {
 
         private static byte[] BrotliUncompress(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
+#if NETSTANDARD2_0
+                byte[] tmp = data.ToArray();
+                compressedStream.Write(tmp, 0, tmp.Length);
+#else
                 compressedStream.Write(data);
+#endif
                 compressedStream.Position = 0;
                 using(var zipStream = new BrotliStream(compressedStream, CompressionMode.Decompress)) {
                     using(var resultStream = new MemoryStream()) {
