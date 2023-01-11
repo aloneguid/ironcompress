@@ -24,26 +24,26 @@ namespace IronCompress {
 
 #if NET6_0_OR_GREATER
             string ri = RuntimeInformation.RuntimeIdentifier;
-            Console.WriteLine("RUNTIME::: {0}", ri);
+            Console.WriteLine("RUNTIME::: {0} SEARCHPATH::: {1}", ri, searchPath);
 #else
             string ri = "<not supported>";
 #endif
 
             try {
                 return NativeLibrary.Load(libraryName, assembly, searchPath);
-            } catch(DllNotFoundException ex) {
-                throw new DllNotFoundException($"Unable to load {libraryName} ({RuntimeInformation.ProcessArchitecture}/{ri}). CD: {Environment.CurrentDirectory}", ex);
+            }
+            catch(DllNotFoundException ex) {
+                throw new DllNotFoundException($"Unable to load {libraryName} ({RuntimeInformation.ProcessArchitecture}/{ri}/{searchPath}). CD: {Environment.CurrentDirectory}", ex);
             }
         }
 #endif
 
-            [DllImport(LibName)]
-        internal static extern unsafe bool compress(
-           bool compress,
-           int codec,
-           byte* inputBuffer,
-           int inputBufferSize,
-           byte* outputBuffer,
-           int* outputBufferSize);
+        [DllImport(LibName)]
+        internal static extern unsafe bool compress(bool compress,
+            int codec,
+            byte* inputBuffer,
+            int inputBufferSize,
+            byte* outputBuffer,
+            int* outputBufferSize);
     }
 }
