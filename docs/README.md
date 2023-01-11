@@ -9,7 +9,7 @@ The library supports the following formats:
 - [Google Snappy](http://google.github.io/snappy/) [[source](https://github.com/google/snappy)].
 - [Facebook's Zstandard (zstd)](https://facebook.github.io/zstd/) [[source](https://github.com/facebook/zstd)].
 - [Gzip](https://www.gnu.org/software/gzip/) [[source](https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.gzipstream?view=net-6.0)].
-- [Google Brotli](https://github.com/google/brotli) [[source](https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.brotlistream?view=net-6.0)].
+- [Google Brotli](https://github.com/google/brotli) [[source](https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.brotlistream?view=net-6.0)] (.net standard 2.0 build uses native version instead).
 - [LZO](http://www.oberhumer.com/opensource/lzo/) [[source](https://github.com/nemequ/lzo)].
 - [LZ4](https://lz4.github.io/lz4/) [[source](https://github.com/lz4/lz4)].
 
@@ -34,11 +34,10 @@ using IronCompress;	// root namespace
 
 // Construct library entry point and optionally pass an implementation of ArrayPool.
 // I will pass default shared pool here.
-var iron = new Iron(ArrayPool<byte>.Shared);
+var iron = new Iron();
 
 byte[] input = ...;
-using(Result compressed = iron.Compress(Codec.Snappy, input.AsSpan()))
-{
+using(DataBuffer compressed = iron.Compress(Codec.Snappy, input.AsSpan())) {
     // ... use data
 }
 ```
@@ -48,8 +47,7 @@ using(Result compressed = iron.Compress(Codec.Snappy, input.AsSpan()))
 To decompress:
 
 ```csharp
-using (Result uncompressed = iron.Decompress(Codec.Snappy, compressed, input.Length))
-{
+using (DataBuffer uncompressed = iron.Decompress(Codec.Snappy, compressed, input.Length)) {
 	// ... use data
 }
 ```

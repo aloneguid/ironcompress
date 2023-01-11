@@ -41,8 +41,12 @@ namespace IronCompress {
         private const CompressionLevel CL = CompressionLevel.Optimal;
 #endif
 
+        /// <summary>
+        /// Create iron instance
+        /// </summary>
+        /// <param name="allocPool">Optionally specify array pool to use. When not set, will use <see cref="ArrayPool{byte}.Shared"/></param>
         public Iron(ArrayPool<byte> allocPool = null) {
-            _allocPool = allocPool;
+            _allocPool = allocPool ?? ArrayPool<byte>.Shared;
         }
 
         public DataBuffer Compress(
@@ -51,6 +55,7 @@ namespace IronCompress {
            int? outputLength = null) {
             return CompressOrDecompress(true, codec, input, outputLength);
         }
+
         public DataBuffer Decompress(
            Codec codec,
            ReadOnlySpan<byte> input,
@@ -66,7 +71,7 @@ namespace IronCompress {
         /// <param name="codec">Compression codec</param>
         /// <param name="input">Input data</param>
         /// <returns></returns>
-        public DataBuffer CompressOrDecompress(
+        private DataBuffer CompressOrDecompress(
             bool compressOrDecompress,
             Codec codec,
             ReadOnlySpan<byte> input,
