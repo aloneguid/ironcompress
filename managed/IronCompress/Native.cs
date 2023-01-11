@@ -1,6 +1,9 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security;
 
 namespace IronCompress {
+
+    [SuppressUnmanagedCodeSecurity]
     static class Native {
         const string LibName = "nironcompress";
 
