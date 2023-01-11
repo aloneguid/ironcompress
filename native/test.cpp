@@ -11,7 +11,14 @@ bool run(int method, char* buffer, size_t buffer_length)
    vector<char> compressed;
    compressed.resize(len);
 
-   ok = compress(true, method, buffer, buffer_length, &compressed[0], &len);
+   ok = compress(true, method, buffer, buffer_length, 
+       &compressed[0], &len);
+
+   vector<byte> decompressed;
+   int bl1 = buffer_length;
+   decompressed.resize(buffer_length);
+   ok = compress(false, method, &compressed[0], len,
+      (char*)&decompressed[0], &bl1);
 
    return ok;
 }
@@ -22,7 +29,7 @@ int main()
 
    //run(1, bytes, 3);
    //run(2, bytes, 3);
-   run(5, bytes, 3);
+   run(4, bytes, 3);
 
    return 0;
 }

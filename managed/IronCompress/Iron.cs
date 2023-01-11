@@ -1,7 +1,5 @@
 ﻿using System.Buffers;
 using System.IO.Compression;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace IronCompress {
     public enum Codec {
@@ -19,6 +17,23 @@ namespace IronCompress {
     public class Iron {
 
         private readonly ArrayPool<byte> _allocPool;
+        private bool _useNativeBrotli;
+
+        /// <summary>
+        /// When set, native Brotli compressor is used instead of the managed implementation.
+        /// Note that .NET Standard 2.0 does not have Brotli in .NET, so native compression is always used.
+        /// </summary>
+        public bool UseNativeBrotli {
+            get { return _useNativeBrotli; }
+            set {
+#if NETSTANDARD2_0
+                _useNativeBrotli = true;
+#else
+                _useNativeBrotli = value;
+#endif
+            }
+        }
+
 
 #if NET6_0_OR_GREATER
         private const CompressionLevel CL = CompressionLevel.SmallestSize;
@@ -52,10 +67,10 @@ namespace IronCompress {
         /// <param name="input">Input data</param>
         /// <returns></returns>
         public DataBuffer CompressOrDecompress(
-           bool compressOrDecompress,
-           Codec codec,
-           ReadOnlySpan<byte> input,
-           int? outputLength = null) {
+            bool compressOrDecompress,
+            Codec codec,
+            ReadOnlySpan<byte> input,
+            int? outputLength = null) {
 
             byte[] result;
 
@@ -66,12 +81,16 @@ namespace IronCompress {
                        : Ungzip(input);
                     return new DataBuffer(result, -1, null);
 
-
+#if !NETSTANDARD2_0
                 case Codec.Brotli:
-                    result = compressOrDecompress
-                       ? BrotliCompress(input)
-                       : BrotliUncompress(input);
-                    return new DataBuffer(result, -1, null);
+                    if(!UseNativeBrotli) {
+                        result = compressOrDecompress
+                           ? BrotliCompress(input)
+                           : BrotliUncompress(input);
+                        return new DataBuffer(result, -1, null);
+                    }
+                    break;
+#endif
             }
 
             int len = 0;
@@ -121,7 +140,12 @@ namespace IronCompress {
         private static byte[] Gzip(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
                 using(var zipStream = new GZipStream(compressedStream, CL)) {
+#if NETSTANDARD2_0
+                    byte[] tmp = data.ToArray();
+                    zipStream.Write(tmp, 0, tmp.Length);
+#else
                     zipStream.Write(data);
+#endif
                     zipStream.Flush();
                     zipStream.Close();
                     return compressedStream.ToArray();
@@ -129,6 +153,7 @@ namespace IronCompress {
             }
         }
 
+#if !NETSTANDARD2_0
         private static byte[] BrotliCompress(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
                 using(var zipStream = new BrotliStream(compressedStream, CL)) {
@@ -139,10 +164,16 @@ namespace IronCompress {
                 }
             }
         }
+#endif
 
         private static byte[] Ungzip(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
+#if NETSTANDARD2_0
+                byte[] tmp = data.ToArray();
+                compressedStream.Write(tmp, 0, tmp.Length);
+#else
                 compressedStream.Write(data);
+#endif
                 compressedStream.Position = 0;
                 using(var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress)) {
                     using(var resultStream = new MemoryStream()) {
@@ -153,6 +184,7 @@ namespace IronCompress {
             }
         }
 
+#if !NETSTANDARD2_0
         private static byte[] BrotliUncompress(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
                 compressedStream.Write(data);
@@ -165,6 +197,7 @@ namespace IronCompress {
                 }
             }
         }
+#endif
 
         //
     }
