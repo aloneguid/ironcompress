@@ -14,7 +14,7 @@
         </When>
         <Otherwise>
             <PropertyGroup>
-                <TargetFrameworks>netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
+                <TargetFrameworks>net7.0</TargetFrameworks>
             </PropertyGroup>
         </Otherwise>
     </Choose>

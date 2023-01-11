@@ -1,7 +1,7 @@
 name: 'Full Flow'
 
 env:
-  VERSION: 1.2.5
+  VERSION: 1.2.6
   #PACKAGE_SUFFIX: '-preview-03'
   PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
@@ -107,7 +107,7 @@ jobs:
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
-        committish: e07c62d05970d7d89e336bdb278b02242e8bda7c
+        committish: c30de8e1369e03f4a569f8f224eed418dd0949bb
         # set to false to clear any cache in case of build errors
         cache: false
 
@@ -199,6 +199,7 @@ jobs:
         dotnet-version: |
           3.1.x
           6.0.x
+          7.0.x
 
     - name: Build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
