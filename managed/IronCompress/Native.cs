@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security;
 
 namespace IronCompress {
@@ -7,7 +8,6 @@ namespace IronCompress {
     static class Native {
         const string LibName = "nironcompress";
 
-        /*
         static Native() {
 
             // lower versions will just have to rely on 64-bit only version, which is the default with no arch suffixes.
@@ -22,47 +22,21 @@ namespace IronCompress {
             if(libraryName != LibName)
                 return IntPtr.Zero;
 
-            string prefix, suffix, arch;
+#if NET6_0_OR_GREATER
+            string ri = RuntimeInformation.RuntimeIdentifier;
+#else
+            string ri = "<not supported>";
+#endif
 
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                prefix = "";
-                suffix = ".dll";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    _ => throw new NotSupportedException("Only x64 is supported on Windows"),
-                };
+            try {
+                return NativeLibrary.Load(libraryName, assembly, searchPath);
+            } catch(DllNotFoundException ex) {
+                throw new DllNotFoundException($"Unable to load {libraryName} ({RuntimeInformation.ProcessArchitecture}/{ri}). CD: {Environment.CurrentDirectory}", ex);
             }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
-                prefix = "lib";
-                suffix = ".so";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    Architecture.Arm64 => "arm64",
-                    _ => throw new NotSupportedException("Only x64 and ARM 64 Linux is supported."),
-                };
-            }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
-                prefix = "lib";
-                suffix = ".dylib";
-                arch = RuntimeInformation.ProcessArchitecture switch {
-                    Architecture.X64 => "",
-                    Architecture.Arm64 => "arm64",
-                    _ => throw new NotSupportedException("Only x64 and ARM 64 MacOSX is supported."),
-                };
-            }
-            else {
-                throw new NotSupportedException($"'{Environment.OSVersion.Platform}' OS is not supported");
-            }
-
-            if(arch != "")
-                arch = "-" + arch;
-            string nativeName = $"{prefix}{LibName}{arch}{suffix}";
-            return NativeLibrary.Load(nativeName, assembly, searchPath);
         }
 #endif
-        */
 
-        [DllImport(LibName)]
+            [DllImport(LibName)]
         internal static extern unsafe bool compress(
            bool compress,
            int codec,
