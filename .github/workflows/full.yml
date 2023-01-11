@@ -166,6 +166,7 @@ jobs:
         dotnet-version: |
           3.1.x
           6.0.x
+          7.0.x
 
     - name: build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
