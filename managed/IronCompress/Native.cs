@@ -24,7 +24,6 @@ namespace IronCompress {
 
 #if NET6_0_OR_GREATER
             string ri = RuntimeInformation.RuntimeIdentifier;
-            Console.WriteLine("RUNTIME::: {0} SEARCHPATH::: {1}", ri, searchPath);
 #else
             string ri = "<not supported>";
 #endif

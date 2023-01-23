@@ -34,6 +34,11 @@ namespace IronCompress {
             }
         }
 
+        /// <summary>
+        /// When set, will use managed Snappy implementation. ON by default.
+        /// </summary>
+        public bool PreferManagedSnappy { get; set; } = true;
+
 
 #if NET6_0_OR_GREATER
         private const CompressionLevel CL = CompressionLevel.SmallestSize;
@@ -80,6 +85,14 @@ namespace IronCompress {
             byte[] result;
 
             switch(codec) {
+                case Codec.Snappy:
+                    if(PreferManagedSnappy) {
+                        result = compressOrDecompress
+                            ? SnappyManagedCompress(input)
+                            : SnappyManagedUncompress(input);
+                        return new DataBuffer(result, -1, null);
+                    }
+                    break;
                 case Codec.Gzip:
                     result = compressOrDecompress
                        ? Gzip(input)
@@ -171,6 +184,10 @@ namespace IronCompress {
         }
 #endif
 
+        private static byte[] SnappyManagedCompress(ReadOnlySpan<byte> data) {
+            return Snappier.Snappy.CompressToArray(data);
+        }
+
         private static byte[] Ungzip(ReadOnlySpan<byte> data) {
             using(var compressedStream = new MemoryStream()) {
 #if NETSTANDARD2_0
@@ -204,6 +221,8 @@ namespace IronCompress {
         }
 #endif
 
-        //
+        private static byte[] SnappyManagedUncompress(ReadOnlySpan<byte> data) {
+            return Snappier.Snappy.DecompressToArray(data);
+        }
     }
 }
