@@ -28,6 +28,11 @@ extern "C"
    /// <param name="input_buffer_size"></param>
    /// <param name="output_buffer">If this is set to nullptr, the function sets output_buffer_size to required maximum size of the compressed data.</param>
    /// <param name="output_buffer_size">When output_buffer is nullptr, this is set to maximum buffer size required. Otherwise, to the size of the actual compressed data written to output_buffer.</param>
+   /// <param name="compression_level">CompressionLevel:
+   /// 1 - fastest
+   /// 2 - balanced
+   /// 3 - best
+   /// </param>
    /// <returns></returns>
    EXPORTED bool compress(
       bool compress,
@@ -35,5 +40,6 @@ extern "C"
       char* input_buffer,
       int input_buffer_size,
       char* output_buffer,
-      int* output_buffer_size);
+      int* output_buffer_size,
+      int compression_level);
 }

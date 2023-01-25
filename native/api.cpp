@@ -60,7 +60,8 @@ bool compress_zstd(
     char* input_buffer,
     int input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size) {
+    int* output_buffer_size,
+	int compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
             *output_buffer_size = ZSTD_compressBound(input_buffer_size);
@@ -71,7 +72,14 @@ bool compress_zstd(
     }
 
     if(compress) {
-        *output_buffer_size = ZSTD_compress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size, ZSTD_btultra2);
+		auto level = ZSTD_btultra2;
+		if(compression_level == 1){
+			level = ZSTD_fast;
+		} else if(compression_level == 2){
+			level = ZSTD_btopt;
+		}
+		
+        *output_buffer_size = ZSTD_compress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size, level);
     } else {
         ZSTD_decompress(output_buffer, *output_buffer_size, input_buffer, input_buffer_size);
     }
@@ -84,7 +92,8 @@ bool compress_brotli(
     char* input_buffer,
     int input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size) {
+    int* output_buffer_size,
+	int compression_level) {
 
     if(output_buffer == nullptr) {
 
@@ -97,8 +106,14 @@ bool compress_brotli(
     }
 
     if(compress) {
+		auto level = BROTLI_MAX_QUALITY;
+		if(compression_level == 1){
+			level = BROTLI_MIN_QUALITY;
+		} else if(compression_level == 2){
+			level = BROTLI_MAX_QUALITY/2;
+		}
         size_t compressed_size = *output_buffer_size;
-        auto r = ::BrotliEncoderCompress(BROTLI_MAX_QUALITY, BROTLI_DEFAULT_WINDOW, BROTLI_DEFAULT_MODE,
+        auto r = ::BrotliEncoderCompress(level, BROTLI_DEFAULT_WINDOW, BROTLI_DEFAULT_MODE,
             input_buffer_size, (const uint8_t*)input_buffer,
             &compressed_size, (uint8_t*)output_buffer);
         *output_buffer_size = compressed_size;
@@ -190,7 +205,8 @@ bool compress_lz4(
     char* input_buffer,
     int input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size) {
+    int* output_buffer_size,
+	int compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
             *output_buffer_size = LZ4_compressBound(input_buffer_size);
@@ -202,7 +218,14 @@ bool compress_lz4(
     }
 
     if(compress) {
-        *output_buffer_size = LZ4_compress_default(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
+		auto level = 65537;
+		if(compression_level == 1){
+			level = 1;
+		} else if(compression_level == 2){
+			level = 32768;
+		}
+
+        *output_buffer_size = LZ4_compress_fast(input_buffer, output_buffer, input_buffer_size, *output_buffer_size, level);
         return *output_buffer_size != 0;
     } else {
         *output_buffer_size = LZ4_decompress_safe(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
@@ -213,19 +236,19 @@ bool compress_lz4(
 }
 
 bool compress(bool compress, int codec, char* input_buffer, int input_buffer_size,
-    char* output_buffer, int* output_buffer_size) {
+    char* output_buffer, int* output_buffer_size, int compression_level) {
     switch(codec) {
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
         case 2:
-            return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+            return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
             // 3 - gzip
         case 4:
-            return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+            return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 5:
             return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
         case 6:
-            return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+            return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         default:
             return false;
     }
