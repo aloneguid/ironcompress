@@ -114,14 +114,14 @@ namespace IronCompress {
             }
 
             int len = 0;
-
+            int level = ConvertToNativeCompressionLevel(compressionLevel ?? CL);
             unsafe {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
                     if(outputLength == null) {
                         bool ok = Native.compress(
                            compressOrDecompress,
-                           (int)codec, inputPtr, input.Length, null, &len);
+                           (int)codec, inputPtr, input.Length, null, &len, level);
                         if(!ok) {
                             throw new InvalidOperationException($"unable to detect result length");
                         }
@@ -138,7 +138,7 @@ namespace IronCompress {
                         try {
                             bool ok = Native.compress(
                                compressOrDecompress,
-                               (int)codec, inputPtr, input.Length, outputPtr, &len);
+                               (int)codec, inputPtr, input.Length, outputPtr, &len, level);
 
                             if(!ok) {
                                 throw new InvalidOperationException($"compression failure");
@@ -154,6 +154,18 @@ namespace IronCompress {
                         }
                     }
                 }
+            }
+        }
+
+        private int ConvertToNativeCompressionLevel(CompressionLevel compressionLevel) {
+            switch(compressionLevel) {
+                case CompressionLevel.NoCompression:
+                case CompressionLevel.Fastest:
+                    return 1;
+                case CompressionLevel.Optimal:
+                    return 2;
+                default:
+                    return 3;
             }
         }
 

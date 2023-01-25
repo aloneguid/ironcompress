@@ -43,6 +43,7 @@ namespace IronCompress {
             byte* inputBuffer,
             int inputBufferSize,
             byte* outputBuffer,
-            int* outputBufferSize);
+            int* outputBufferSize,
+            int compressionLevel);
     }
 }

@@ -6,19 +6,19 @@ using namespace std;
 bool run(int method, char* buffer, size_t buffer_length)
 {
    int len{ 0 };
-   bool ok = compress(true, method, buffer, buffer_length, nullptr, &len);
+   bool ok = compress(true, method, buffer, buffer_length, nullptr, &len, 2);
 
    vector<char> compressed;
    compressed.resize(len);
 
    ok = compress(true, method, buffer, buffer_length, 
-       &compressed[0], &len);
+       &compressed[0], &len, 2);
 
    vector<byte> decompressed;
    int bl1 = buffer_length;
    decompressed.resize(buffer_length);
    ok = compress(false, method, &compressed[0], len,
-      (char*)&decompressed[0], &bl1);
+      (char*)&decompressed[0], &bl1, 2);
 
    return ok;
 }
