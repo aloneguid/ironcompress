@@ -9,27 +9,6 @@ namespace IronCompress {
     public class Iron {
 
         private readonly ArrayPool<byte> _allocPool;
-        private bool _useNativeBrotli;
-
-        /// <summary>
-        /// When set, native Brotli compressor is used instead of the managed implementation.
-        /// Note that .NET Standard 2.0 does not have Brotli in .NET, so native compression is always used.
-        /// </summary>
-        public bool UseNativeBrotli {
-            get { return _useNativeBrotli; }
-            set {
-#if NETSTANDARD2_0
-                _useNativeBrotli = true;
-#else
-                _useNativeBrotli = value;
-#endif
-            }
-        }
-
-        /// <summary>
-        /// When set, will use managed Snappy implementation. ON by default.
-        /// </summary>
-        public bool PreferManagedSnappy { get; set; } = true;
 
 
 #if NET6_0_OR_GREATER
@@ -79,30 +58,11 @@ namespace IronCompress {
             byte[] result;
 
             switch(codec) {
-                case Codec.Snappy:
-                    if(PreferManagedSnappy) {
-                        result = compressOrDecompress
-                            ? SnappyManagedCompress(input)
-                            : SnappyManagedUncompress(input);
-                        return new DataBuffer(result, -1, null);
-                    }
-                    break;
                 case Codec.Gzip:
                     result = compressOrDecompress
-                       ? Gzip(input, compressionLevel)
-                       : Ungzip(input);
+                        ? Gzip(input, compressionLevel)
+                        : Ungzip(input);
                     return new DataBuffer(result, -1, null);
-
-#if !NETSTANDARD2_0
-                case Codec.Brotli:
-                    if(!UseNativeBrotli) {
-                        result = compressOrDecompress
-                           ? BrotliCompress(input, compressionLevel)
-                           : BrotliUncompress(input);
-                        return new DataBuffer(result, -1, null);
-                    }
-                    break;
-#endif
             }
 
             int len = 0;
@@ -129,8 +89,8 @@ namespace IronCompress {
                     fixed(byte* outputPtr = output) {
                         try {
                             bool ok = Native.compress(
-                               compressOrDecompress,
-                               (int)codec, inputPtr, input.Length, outputPtr, &len, level);
+                                compressOrDecompress,
+                                (int)codec, inputPtr, input.Length, outputPtr, &len, level);
 
                             if(!ok) {
                                 throw new InvalidOperationException($"compression failure");
@@ -138,11 +98,29 @@ namespace IronCompress {
 
                             return new DataBuffer(output, len, _allocPool);
                         }
-                        catch {
+                        catch(System.AggregateException e) {
+                            e.Handle(exception => exception is DllNotFoundException);
+
+                            switch(codec) {
+                                case Codec.Snappy:
+                                        result = compressOrDecompress
+                                            ? SnappyManagedCompress(input)
+                                            : SnappyManagedUncompress(input);
+                                        return new DataBuffer(result, -1, null);
+#if !NETSTANDARD2_0
+                                case Codec.Brotli:
+                                    result = compressOrDecompress
+                                        ? BrotliCompress(input, compressionLevel)
+                                        : BrotliUncompress(input);
+                                    return new DataBuffer(result, -1, null);
+#endif
+                            }
+                            throw;
+                        }
+                        finally {
                             if(_allocPool != null) {
                                 _allocPool.Return(output);
                             }
-                            throw;
                         }
                     }
                 }

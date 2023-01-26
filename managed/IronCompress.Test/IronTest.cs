@@ -44,29 +44,6 @@ public class IronTest {
         }
     }
 
-    [Fact]
-    public void SnappyManagedVsUnmanaged() {
-        byte[] input = new byte[_rnd.Next(100, 10000)];
-        _rnd.NextBytes(input);
-
-        // compress with managed lib
-        _iron.PreferManagedSnappy= true;
-        DataBuffer managedBuffer = _iron.Compress(Codec.Snappy, input.AsSpan());
-        using(DataBuffer uncompressed = _iron.Decompress(Codec.Snappy, managedBuffer, input.Length)) {
-            Assert.Equal(input, uncompressed.AsSpan().ToArray());
-        }
-
-        // compress with native lib
-        _iron.PreferManagedSnappy = false;
-        DataBuffer nativeBuffer = _iron.Compress(Codec.Snappy, input.AsSpan());
-        using(DataBuffer uncompressed = _iron.Decompress(Codec.Snappy, nativeBuffer, input.Length)) {
-            Assert.Equal(input, uncompressed.AsSpan().ToArray());
-        }
-
-        Assert.Equal(managedBuffer.AsSpan().ToArray(), nativeBuffer.AsSpan().ToArray());
-
-    }
-
     /*[Theory]
     [InlineData(Codec.Snappy)]
     [InlineData(Codec.Zstd)]
