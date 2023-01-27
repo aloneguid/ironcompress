@@ -49,8 +49,9 @@ namespace IronCompress {
         public DataBuffer Compress(
            Codec codec,
            ReadOnlySpan<byte> input,
-           int? outputLength = null) {
-            return CompressOrDecompress(true, codec, input, outputLength);
+           int? outputLength = null,
+           CompressionLevel? compressionLevel = null) {
+            return CompressOrDecompress(true, codec, input, outputLength, compressionLevel);
         }
 
         public DataBuffer Decompress(
@@ -72,7 +73,8 @@ namespace IronCompress {
             bool compressOrDecompress,
             Codec codec,
             ReadOnlySpan<byte> input,
-            int? outputLength = null) {
+            int? outputLength = null,
+            CompressionLevel? compressionLevel = null) {
 
             byte[] result;
 
@@ -87,7 +89,7 @@ namespace IronCompress {
                     break;
                 case Codec.Gzip:
                     result = compressOrDecompress
-                       ? Gzip(input)
+                       ? Gzip(input, compressionLevel)
                        : Ungzip(input);
                     return new DataBuffer(result, -1, null);
 
@@ -95,7 +97,7 @@ namespace IronCompress {
                 case Codec.Brotli:
                     if(!UseNativeBrotli) {
                         result = compressOrDecompress
-                           ? BrotliCompress(input)
+                           ? BrotliCompress(input, compressionLevel)
                            : BrotliUncompress(input);
                         return new DataBuffer(result, -1, null);
                     }
@@ -104,14 +106,14 @@ namespace IronCompress {
             }
 
             int len = 0;
-
+            int level = ConvertToNativeCompressionLevel(compressionLevel ?? CL);
             unsafe {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
                     if(outputLength == null) {
                         bool ok = Native.compress(
                            compressOrDecompress,
-                           (int)codec, inputPtr, input.Length, null, &len);
+                           (int)codec, inputPtr, input.Length, null, &len, level);
                         if(!ok) {
                             throw new InvalidOperationException($"unable to detect result length");
                         }
@@ -128,7 +130,7 @@ namespace IronCompress {
                         try {
                             bool ok = Native.compress(
                                compressOrDecompress,
-                               (int)codec, inputPtr, input.Length, outputPtr, &len);
+                               (int)codec, inputPtr, input.Length, outputPtr, &len, level);
 
                             if(!ok) {
                                 throw new InvalidOperationException($"compression failure");
@@ -147,9 +149,21 @@ namespace IronCompress {
             }
         }
 
-        private static byte[] Gzip(ReadOnlySpan<byte> data) {
+        private int ConvertToNativeCompressionLevel(CompressionLevel compressionLevel) {
+            switch(compressionLevel) {
+                case CompressionLevel.NoCompression:
+                case CompressionLevel.Fastest:
+                    return 1;
+                case CompressionLevel.Optimal:
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
+
+        private static byte[] Gzip(ReadOnlySpan<byte> data, CompressionLevel? compressionLevel = null) {
             using(var compressedStream = new MemoryStream()) {
-                using(var zipStream = new GZipStream(compressedStream, CL)) {
+                using(var zipStream = new GZipStream(compressedStream, compressionLevel ?? CL)) {
 #if NETSTANDARD2_0
                     byte[] tmp = data.ToArray();
                     zipStream.Write(tmp, 0, tmp.Length);
@@ -164,9 +178,9 @@ namespace IronCompress {
         }
 
 #if !NETSTANDARD2_0
-        private static byte[] BrotliCompress(ReadOnlySpan<byte> data) {
+        private static byte[] BrotliCompress(ReadOnlySpan<byte> data, CompressionLevel? compressionLevel = null) {
             using(var compressedStream = new MemoryStream()) {
-                using(var zipStream = new BrotliStream(compressedStream, CL)) {
+                using(var zipStream = new BrotliStream(compressedStream, compressionLevel ?? CL)) {
                     zipStream.Write(data);
                     zipStream.Flush();
                     zipStream.Close();
