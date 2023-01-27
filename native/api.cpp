@@ -226,8 +226,8 @@ bool compress_lz4(
     return false;
 }
 
-bool compress(bool compress, int codec, char* input_buffer, int input_buffer_size,
-    char* output_buffer, int* output_buffer_size, int compression_level) {
+bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
+    char* output_buffer, int32_t* output_buffer_size, int32_t compression_level) {
     switch(codec) {
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
@@ -245,7 +245,7 @@ bool compress(bool compress, int codec, char* input_buffer, int input_buffer_siz
     }
 }
 
-bool is_supported(int codec) {
+bool is_supported(int32_t codec) {
     return codec == 1 ||
         codec == 2 ||
         // not 3

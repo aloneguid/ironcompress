@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <stdint.h>
+
 #ifdef _WIN32
 # ifdef WIN_EXPORT
 #   define EXPORTED  __declspec( dllexport )
@@ -25,19 +27,19 @@ extern "C"
    */
    EXPORTED bool compress(
       bool compress,
-      int codec,
+      int32_t codec,
       char* input_buffer,
-      int input_buffer_size,
+      int32_t input_buffer_size,
       char* output_buffer,
-      int* output_buffer_size,
-      int compression_level);
+      int32_t* output_buffer_size,
+      int32_t compression_level);
 
    /**
     * @brief Checks if particular codec is supported
     * @param codec 
     * @return true if supported, false otherwise
    */
-   EXPORTED bool is_supported(int codec);
+   EXPORTED bool is_supported(int32_t codec);
 
    /**
     * @brief Used to just ping the library to test it's available at all
