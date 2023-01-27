@@ -253,3 +253,14 @@ bool compress(bool compress, int codec, char* input_buffer, int input_buffer_siz
             return false;
     }
 }
+
+bool is_supported(int codec) {
+    return codec == 1 ||
+        codec == 2 ||
+        // not 3
+        codec == 4 ||
+        codec == 5 ||
+        codec == 6;
+}
+
+bool ping() { return true; }

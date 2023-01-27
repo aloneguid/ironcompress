@@ -127,6 +127,9 @@ dotnet_separate_import_directive_groups = false
 
 # Newline settings (see https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options)
 csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
 
 # Identation options
 csharp_indent_case_contents = true
@@ -196,11 +199,7 @@ dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 
 dotnet_naming_style.prefix_underscore.capitalization = camel_case
 dotnet_naming_style.prefix_underscore.required_prefix = _
-
-[*.yml]
-indent_style=space
-indent_size = 2
-tab_width = 2
+csharp_style_prefer_top_level_statements = true:silent
 
 [*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
 cpp_generate_documentation_comments = doxygen_slash_star
@@ -262,3 +261,8 @@ cpp_space_around_assignment_operator = insert
 cpp_space_pointer_reference_alignment = left
 cpp_space_around_ternary_operator = insert
 cpp_wrap_preserve_blocks = one_liners
+
+[*.yml]
+indent_style=space
+indent_size = 2
+tab_width = 2

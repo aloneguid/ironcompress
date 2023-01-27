@@ -12,28 +12,17 @@
 
 extern "C"
 {
-   /// <summary>
-   /// Encode (compress) or decompress
-   /// </summary>
-   /// <param name="compress">When true this is compression, otherwise decompression.</param>
-   /// <param name="codec">Codec:
-   /// 1 - snappy
-   /// 2 - zstd
-   /// 3 - not in use
-   /// 4 - brotli
-   /// 5 - lzo
-   /// 6 - lz4 
-   /// </param>
-   /// <param name="input_buffer"></param>
-   /// <param name="input_buffer_size"></param>
-   /// <param name="output_buffer">If this is set to nullptr, the function sets output_buffer_size to required maximum size of the compressed data.</param>
-   /// <param name="output_buffer_size">When output_buffer is nullptr, this is set to maximum buffer size required. Otherwise, to the size of the actual compressed data written to output_buffer.</param>
-   /// <param name="compression_level">CompressionLevel:
-   /// 1 - fastest
-   /// 2 - balanced
-   /// 3 - best
-   /// </param>
-   /// <returns></returns>
+   /**
+    * @brief Encode (compress) or decompress
+    * @param compress When true this is compression, otherwise decompression.
+    * @param codec 1 - snappy, 2 - zstd, 3 - n/a, 4 - brotli, 5 - lzo, 6 - lz4
+    * @param input_buffer If this is set to nullptr, the function sets output_buffer_size to required maximum size of the compressed data.
+    * @param input_buffer_size 
+    * @param output_buffer When output_buffer is nullptr, this is set to maximum buffer size required. Otherwise, to the size of the actual compressed data written to output_buffer.
+    * @param output_buffer_size 
+    * @param compression_level 1 - fastest, 2 - balanced, 3 - best
+    * @return 
+   */
    EXPORTED bool compress(
       bool compress,
       int codec,
@@ -42,4 +31,16 @@ extern "C"
       char* output_buffer,
       int* output_buffer_size,
       int compression_level);
+
+   /**
+    * @brief Checks if particular codec is supported
+    * @param codec 
+    * @return true if supported, false otherwise
+   */
+   EXPORTED bool is_supported(int codec);
+
+   /**
+    * @brief Used to just ping the library to test it's available at all
+   */
+   EXPORTED bool ping();
 }
