@@ -45,5 +45,11 @@ namespace IronCompress {
             byte* outputBuffer,
             int* outputBufferSize,
             int compressionLevel);
+
+        [DllImport(LibName)]
+        internal static extern bool ping();
+
+        [DllImport(LibName)]
+        internal static extern bool is_supported(int codec);
     }
 }

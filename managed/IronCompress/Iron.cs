@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace IronCompress {
 
@@ -9,104 +10,100 @@ namespace IronCompress {
     public class Iron {
 
         private readonly ArrayPool<byte> _allocPool;
-        private bool _useNativeBrotli;
+        private static bool? _isNativeLibraryAvailable;
 
         /// <summary>
-        /// When set, native Brotli compressor is used instead of the managed implementation.
-        /// Note that .NET Standard 2.0 does not have Brotli in .NET, so native compression is always used.
+        /// Returns true if native compression library is available on this platform
         /// </summary>
-        public bool UseNativeBrotli {
-            get { return _useNativeBrotli; }
-            set {
-#if NETSTANDARD2_0
-                _useNativeBrotli = true;
-#else
-                _useNativeBrotli = value;
-#endif
+        public static bool IsNativeLibraryAvailable {
+            get {
+                // cache the results, as it won't change during the lifetime of the app
+                if(_isNativeLibraryAvailable == null) {
+                    try {
+                        Native.ping();
+                        _isNativeLibraryAvailable = true;
+
+                    } catch(DllNotFoundException) {
+                        _isNativeLibraryAvailable = false;
+                    }
+                }
+
+                return _isNativeLibraryAvailable ?? false;
             }
         }
 
-        /// <summary>
-        /// When set, will use managed Snappy implementation. ON by default.
-        /// </summary>
-        public bool PreferManagedSnappy { get; set; } = true;
-
-
-#if NET6_0_OR_GREATER
-        private const CompressionLevel CL = CompressionLevel.SmallestSize;
+        static bool SupportsManaged(Codec c) {
+#if NETSTANDARD2_0
+            return c == Codec.Snappy || c == Codec.Gzip;
 #else
-        private const CompressionLevel CL = CompressionLevel.Optimal;
+            return c == Codec.Snappy || c == Codec.Gzip || c == Codec.Brotli;
 #endif
+        }
+
+        static bool SupportsNative(Codec c) {
+            return IsNativeLibraryAvailable && Native.is_supported((int)c);
+        }
+
 
         /// <summary>
         /// Create iron instance
         /// </summary>
         /// <param name="allocPool">Optionally specify array pool to use. When not set, will use <see cref="ArrayPool{byte}.Shared"/></param>
-        public Iron(ArrayPool<byte> allocPool = null) {
+        public Iron(ArrayPool<byte>? allocPool = null) {
             _allocPool = allocPool ?? ArrayPool<byte>.Shared;
         }
 
-        public DataBuffer Compress(
-           Codec codec,
-           ReadOnlySpan<byte> input,
-           int? outputLength = null,
-           CompressionLevel? compressionLevel = null) {
-            return CompressOrDecompress(true, codec, input, outputLength, compressionLevel);
-        }
-
-        public DataBuffer Decompress(
-           Codec codec,
-           ReadOnlySpan<byte> input,
-           int? outputLength = null) {
-            return CompressOrDecompress(false, codec, input, outputLength);
-        }
-
-
-        /// <summary>
-        /// Compress or decompress
-        /// </summary>
-        /// <param name="compressOrDecompress">When true, compresses, otherwise decompresses</param>
-        /// <param name="codec">Compression codec</param>
-        /// <param name="input">Input data</param>
-        /// <returns></returns>
-        private DataBuffer CompressOrDecompress(
-            bool compressOrDecompress,
+        public IronCompressResult Compress(
             Codec codec,
             ReadOnlySpan<byte> input,
             int? outputLength = null,
-            CompressionLevel? compressionLevel = null) {
+            CompressionLevel compressionLevel = CompressionLevel.Optimal) {
 
-            byte[] result;
+            if(SupportsNative(codec))
+                return NativeCompressOrDecompress(true, codec, input, compressionLevel, outputLength);
 
-            switch(codec) {
-                case Codec.Snappy:
-                    if(PreferManagedSnappy) {
-                        result = compressOrDecompress
-                            ? SnappyManagedCompress(input)
-                            : SnappyManagedUncompress(input);
-                        return new DataBuffer(result, -1, null);
-                    }
-                    break;
-                case Codec.Gzip:
-                    result = compressOrDecompress
-                       ? Gzip(input, compressionLevel)
-                       : Ungzip(input);
-                    return new DataBuffer(result, -1, null);
+            if(SupportsManaged(codec))
+                return ManagedCompressOrDecompress(true, codec, input, compressionLevel, outputLength);
 
-#if !NETSTANDARD2_0
-                case Codec.Brotli:
-                    if(!UseNativeBrotli) {
-                        result = compressOrDecompress
-                           ? BrotliCompress(input, compressionLevel)
-                           : BrotliUncompress(input);
-                        return new DataBuffer(result, -1, null);
-                    }
-                    break;
+            throw CreateUnavailableException(codec);
+
+        }
+
+        public IronCompressResult Decompress(
+           Codec codec,
+           ReadOnlySpan<byte> input,
+           int? outputLength = null) {
+            
+            if(SupportsNative(codec))
+                return NativeCompressOrDecompress(true, codec, input, CompressionLevel.NoCompression, outputLength);
+
+            if(SupportsManaged(codec))
+                return ManagedCompressOrDecompress(true, codec, input, CompressionLevel.NoCompression, outputLength);
+
+            throw CreateUnavailableException(codec);
+        }
+
+        private static Exception CreateUnavailableException(Codec codec) {
+#if NET6_0_OR_GREATER
+            string ri = RuntimeInformation.RuntimeIdentifier;
+#else
+            string ri = "unknown";
 #endif
-            }
+
+            return new NotSupportedException(
+                $"No compression codec for {codec} is available on this platform (arch: {RuntimeInformation.ProcessArchitecture}, rt: {ri}, native: {IsNativeLibraryAvailable})");
+
+        }
+
+        private IronCompressResult NativeCompressOrDecompress(
+            bool compressOrDecompress,
+            Codec codec,
+            ReadOnlySpan<byte> input,
+            CompressionLevel compressionLevel,
+            int? outputLength = null) {
 
             int len = 0;
-            int level = ConvertToNativeCompressionLevel(compressionLevel ?? CL);
+            int level = ToNativeCompressionLevel(compressionLevel);
             unsafe {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
@@ -117,8 +114,7 @@ namespace IronCompress {
                         if(!ok) {
                             throw new InvalidOperationException($"unable to detect result length");
                         }
-                    }
-                    else {
+                    } else {
                         len = outputLength.Value;
                     }
 
@@ -136,9 +132,8 @@ namespace IronCompress {
                                 throw new InvalidOperationException($"compression failure");
                             }
 
-                            return new DataBuffer(output, len, _allocPool);
-                        }
-                        catch {
+                            return new IronCompressResult(output, codec, true, len, _allocPool);
+                        } catch {
                             if(_allocPool != null) {
                                 _allocPool.Return(output);
                             }
@@ -149,7 +144,40 @@ namespace IronCompress {
             }
         }
 
-        private int ConvertToNativeCompressionLevel(CompressionLevel compressionLevel) {
+        private IronCompressResult ManagedCompressOrDecompress(
+            bool compressOrDecompress,
+            Codec codec,
+            ReadOnlySpan<byte> input,
+            CompressionLevel compressionLevel,
+            int? outputLength = null) {
+
+            byte[] result;
+
+            switch(codec) {
+                case Codec.Snappy:
+                    result = compressOrDecompress
+                        ? SnappyManagedCompress(input)
+                        : SnappyManagedUncompress(input);
+                    return new IronCompressResult(result, codec, false, -1, null);
+                case Codec.Gzip:
+                    result = compressOrDecompress
+                       ? Gzip(input, compressionLevel)
+                       : Ungzip(input);
+                    return new IronCompressResult(result, codec, false, -1, null);
+
+#if !NETSTANDARD2_0
+                case Codec.Brotli:
+                    result = compressOrDecompress
+                        ? BrotliCompress(input, compressionLevel)
+                        : BrotliUncompress(input);
+                    return new IronCompressResult(result, codec, false, -1, null);
+#endif
+                default:
+                    throw new NotSupportedException($"managed compression for {codec} is not supported");
+            }
+        }
+
+        private int ToNativeCompressionLevel(CompressionLevel compressionLevel) {
             switch(compressionLevel) {
                 case CompressionLevel.NoCompression:
                 case CompressionLevel.Fastest:
@@ -161,9 +189,9 @@ namespace IronCompress {
             }
         }
 
-        private static byte[] Gzip(ReadOnlySpan<byte> data, CompressionLevel? compressionLevel = null) {
+        private static byte[] Gzip(ReadOnlySpan<byte> data, CompressionLevel compressionLevel) {
             using(var compressedStream = new MemoryStream()) {
-                using(var zipStream = new GZipStream(compressedStream, compressionLevel ?? CL)) {
+                using(var zipStream = new GZipStream(compressedStream, compressionLevel)) {
 #if NETSTANDARD2_0
                     byte[] tmp = data.ToArray();
                     zipStream.Write(tmp, 0, tmp.Length);
@@ -178,9 +206,9 @@ namespace IronCompress {
         }
 
 #if !NETSTANDARD2_0
-        private static byte[] BrotliCompress(ReadOnlySpan<byte> data, CompressionLevel? compressionLevel = null) {
+        private static byte[] BrotliCompress(ReadOnlySpan<byte> data, CompressionLevel compressionLevel) {
             using(var compressedStream = new MemoryStream()) {
-                using(var zipStream = new BrotliStream(compressedStream, compressionLevel ?? CL)) {
+                using(var zipStream = new BrotliStream(compressedStream, compressionLevel)) {
                     zipStream.Write(data);
                     zipStream.Flush();
                     zipStream.Close();
