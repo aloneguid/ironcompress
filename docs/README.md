@@ -2,7 +2,7 @@
 
  [![NuGet](https://img.shields.io/nuget/v/IronCompress.svg)](https://www.nuget.org/packages/IronCompress)
 
-<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for Gzip and Brotli (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](https://github.com/aloneguid/IronSnappy). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
+<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for **Gzip** and **Brotli** (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](https://github.com/aloneguid/IronSnappy). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
 
 The library supports the following formats:
 
@@ -34,7 +34,13 @@ And following architectures:
 |            |                                                 |      | ✅       | ✅     | ✅       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
 
-The library periodically updates to the latest binaries. All the binaries are compiled from C/C++ source with `CMake` for major systems i.e. Linux, Windows and Mac OSX. They are then wrapped safely with a .NET interface.
+I periodically update to the latest binaries. All the binaries are compiled from C/C++ source with `CMake` for major systems i.e. Linux, Windows and Mac OSX. They are then wrapped safely with a .NET interface.
+
+## Logic
+
+Although managed versions are available, they will be only used as a fallback when native library is not available, because native libraries are faster and more up to date with latest advancements.
+
+You can check which version was used by reading `IronCompressResult.NativeUsed` flag.
 
 ## Using
 
@@ -50,7 +56,7 @@ using IronCompress;	// root namespace
 var iron = new Iron();
 
 byte[] input = ...;
-using(DataBuffer compressed = iron.Compress(Codec.Snappy, input.AsSpan())) {
+using(IronCompressResult compressed = iron.Compress(Codec.Snappy, input.AsSpan())) {
     // ... use data
 }
 ```
@@ -60,7 +66,7 @@ using(DataBuffer compressed = iron.Compress(Codec.Snappy, input.AsSpan())) {
 To decompress:
 
 ```csharp
-using (DataBuffer uncompressed = iron.Decompress(Codec.Snappy, compressed, input.Length)) {
+using (IronCompressResult uncompressed = iron.Decompress(Codec.Snappy, compressed, input.Length)) {
 	// ... use data
 }
 ```
