@@ -2,14 +2,6 @@
 using System.IO.Compression;
 
 namespace IronCompress {
-    public enum Codec {
-        Snappy = 1,
-        Zstd = 2,
-        Gzip = 3,
-        Brotli = 4,
-        LZO = 5,
-        LZ4 = 6
-    }
 
     /// <summary>
     /// Cross-platform P/Invoke wrapper as described in https://docs.microsoft.com/en-us/dotnet/standard/native-interop/cross-platform
