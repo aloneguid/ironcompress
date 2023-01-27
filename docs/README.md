@@ -15,11 +15,24 @@ The library supports the following formats:
 
 And following architectures:
 
-|      | Windows     | Linux | Mac OSX |
-| ---- | ----------- | ----- | ------- |
-| x64  | ✅           | ✅     | ✅       |
-| x32  | ✅           | ⛔     | ⛔       |
-| ARM  | coming soon | ✅     | ✅       |
+| Format     | Managed                                         |      | Windows | Linux | Mac OSX | ◀️ OS<br />Arch 🔽 |
+| ---------- | ----------------------------------------------- | ---- | ------- | ----- | ------- | ---------------- |
+| **Snappy** | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
+| **Zstd**   | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
+| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                           |      |         |       |         |                  |
+| **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup> |      | ✅       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
+| **LZO**    | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
+| **LZ4**    | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
 
 The library periodically updates to the latest binaries. All the binaries are compiled from C/C++ source with `CMake` for major systems i.e. Linux, Windows and Mac OSX. They are then wrapped safely with a .NET interface.
 
