@@ -35,13 +35,6 @@ extern "C"
       int32_t compression_level);
 
    /**
-    * @brief Checks if particular codec is supported
-    * @param codec 
-    * @return true if supported, false otherwise
-   */
-   EXPORTED bool is_supported(int32_t codec);
-
-   /**
     * @brief Used to just ping the library to test it's available at all
    */
    EXPORTED bool ping();

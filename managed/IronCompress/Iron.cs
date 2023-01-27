@@ -43,7 +43,7 @@ namespace IronCompress {
         }
 
         static bool SupportsNative(Codec c) {
-            return IsNativeLibraryAvailable && Native.is_supported((int)c);
+            return IsNativeLibraryAvailable && c != Codec.Gzip;
         }
 
         /// <summary>
@@ -87,7 +87,15 @@ namespace IronCompress {
            Codec codec,
            ReadOnlySpan<byte> input,
            int? outputLength = null) {
-            
+
+            if(ForcePlatform != null) {
+                if(ForcePlatform == Platform.Native) {
+                    return NativeCompressOrDecompress(false, codec, input, CompressionLevel.NoCompression, outputLength);
+                } else if(ForcePlatform == Platform.Managed) {
+                    return ManagedCompressOrDecompress(false, codec, input, CompressionLevel.NoCompression, outputLength);
+                }
+            }
+
             if(SupportsNative(codec))
                 return NativeCompressOrDecompress(false, codec, input, CompressionLevel.NoCompression, outputLength);
 
