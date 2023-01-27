@@ -75,10 +75,10 @@ namespace IronCompress {
            int? outputLength = null) {
             
             if(SupportsNative(codec))
-                return NativeCompressOrDecompress(true, codec, input, CompressionLevel.NoCompression, outputLength);
+                return NativeCompressOrDecompress(false, codec, input, CompressionLevel.NoCompression, outputLength);
 
             if(SupportsManaged(codec))
-                return ManagedCompressOrDecompress(true, codec, input, CompressionLevel.NoCompression, outputLength);
+                return ManagedCompressOrDecompress(false, codec, input, CompressionLevel.NoCompression, outputLength);
 
             throw CreateUnavailableException(codec);
         }
