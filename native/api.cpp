@@ -245,13 +245,4 @@ bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_bu
     }
 }
 
-bool is_supported(int32_t codec) {
-    return codec == 1 ||
-        codec == 2 ||
-        // not 3
-        codec == 4 ||
-        codec == 5 ||
-        codec == 6;
-}
-
 bool ping() { return true; }
