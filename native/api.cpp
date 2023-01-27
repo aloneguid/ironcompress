@@ -18,41 +18,32 @@ bool compress_snappy(
    char* input_buffer,
    int input_buffer_size,
    char* output_buffer,
-   int* output_buffer_size)
-{
-   if (output_buffer == nullptr)
-   {
-      if (compress)
-         *output_buffer_size = snappy::MaxCompressedLength(input_buffer_size);
-      else
-      {
-         size_t length;
-         if (snappy::GetUncompressedLength(input_buffer, input_buffer_size, &length))
-         {
-            *output_buffer_size = length;
-         }
-         else
-         {
-            *output_buffer_size = 0;
-            return false;
-         }
-      }
+   int* output_buffer_size) {
+    if(output_buffer == nullptr) {
+        if(compress)
+            *output_buffer_size = snappy::MaxCompressedLength(input_buffer_size);
+        else {
+            size_t length;
+            if(snappy::GetUncompressedLength(input_buffer, input_buffer_size, &length)) {
+                *output_buffer_size = length;
+            } else {
+                *output_buffer_size = 0;
+                return false;
+            }
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   if (compress)
-   {
-      size_t compressed_length{ 0 };
-      snappy::RawCompress(input_buffer, input_buffer_size, output_buffer, &compressed_length);
-      *output_buffer_size = compressed_length;
-   }
-   else
-   {
-      snappy::RawUncompress(input_buffer, input_buffer_size, output_buffer);
-   }
+    if(compress) {
+        size_t compressed_length{0};
+        snappy::RawCompress(input_buffer, input_buffer_size, output_buffer, &compressed_length);
+        *output_buffer_size = compressed_length;
+    } else {
+        snappy::RawUncompress(input_buffer, input_buffer_size, output_buffer);
+    }
 
-   return true;
+    return true;
 }
 
 bool compress_zstd(
