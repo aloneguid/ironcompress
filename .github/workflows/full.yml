@@ -150,6 +150,8 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - uses: actions/download-artifact@v3
       with:
@@ -184,6 +186,8 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - uses: actions/download-artifact@v2
       with:
