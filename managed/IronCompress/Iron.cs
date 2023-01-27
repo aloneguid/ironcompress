@@ -25,6 +25,8 @@ namespace IronCompress {
 
                     } catch(DllNotFoundException) {
                         _isNativeLibraryAvailable = false;
+                    } catch(BadImageFormatException) { 
+                        _isNativeLibraryAvailable = false;
                     }
                 }
 
@@ -44,6 +46,10 @@ namespace IronCompress {
             return IsNativeLibraryAvailable && Native.is_supported((int)c);
         }
 
+        /// <summary>
+        /// Set to force specific platform. Used mostly in benchmarking tests, prefer not to set.
+        /// </summary>
+        public Platform? ForcePlatform { get; set; }
 
         /// <summary>
         /// Create iron instance
@@ -58,6 +64,14 @@ namespace IronCompress {
             ReadOnlySpan<byte> input,
             int? outputLength = null,
             CompressionLevel compressionLevel = CompressionLevel.Optimal) {
+
+            if(ForcePlatform != null) { 
+                if(ForcePlatform == Platform.Native) {
+                    return NativeCompressOrDecompress(true, codec, input, compressionLevel, outputLength);
+                } else if(ForcePlatform == Platform.Managed) {
+                    return ManagedCompressOrDecompress(true, codec, input, compressionLevel, outputLength);
+                }
+            }
 
             if(SupportsNative(codec))
                 return NativeCompressOrDecompress(true, codec, input, compressionLevel, outputLength);

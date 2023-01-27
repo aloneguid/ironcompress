@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\docs\README.md = ..\docs\README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronCompress.Benchmarks", "IronCompress.Benchmarks\IronCompress.Benchmarks.csproj", "{FB951E3A-3B24-4BB3-89D0-23B4E6013C86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24CE97A1-3502-481C-AFF9-891D45B6699D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB951E3A-3B24-4BB3-89D0-23B4E6013C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB951E3A-3B24-4BB3-89D0-23B4E6013C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB951E3A-3B24-4BB3-89D0-23B4E6013C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB951E3A-3B24-4BB3-89D0-23B4E6013C86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
