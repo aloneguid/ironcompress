@@ -33,10 +33,6 @@ jobs:
         include:
           - os: windows-latest
             arch: x86
-        exclude:
-          # no build agent for Windows ARM
-          - os: windows-latest
-            arch: arm64
       fail-fast: false
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
 
@@ -75,10 +71,14 @@ jobs:
     - name: Windows x32
       if: runner.os == 'Windows' && matrix.arch == 'x86'
       run: |
-        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
-        echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows" >> $env:GITHUB_ENV
         echo "DOTNET_RID=win-x86" >> $env:GITHUB_ENV
         echo "CMAKE_OPTIONS=-A Win32" >> $env:GITHUB_ENV
+
+    - name: Windows ARM
+      if: runner.os == 'Windows' && matrix.arch == 'arm64'
+      run: |
+        echo "DOTNET_RID=win-arm64" >> $env:GITHUB_ENV
+        echo "CMAKE_OPTIONS=-A ARM64" >> $env:GITHUB_ENV
 
     - name: Linux x64
       if: runner.os == 'Linux' && matrix.arch == 'x64'
