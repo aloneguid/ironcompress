@@ -20,10 +20,10 @@ And following architectures:
 | **Snappy** | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
 |            |                                                 |      | ✅       | ✅     | ✅       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Zstd**   | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
+| **Zstd**   | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
 |            |                                                 |      | ✅       | ✅     | ✅       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                           |      |         |       |         |                  |
+| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                |      |         |       |         |                  |
 | **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup> |      | ✅       | ⛔     | ⛔       | x32              |
 |            |                                                 |      | ✅       | ✅     | ✅       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
