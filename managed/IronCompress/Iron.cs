@@ -38,7 +38,7 @@ namespace IronCompress {
 #if NETSTANDARD2_0
             return c == Codec.Snappy || c == Codec.Gzip;
 #else
-            return c == Codec.Snappy || c == Codec.Gzip || c == Codec.Brotli;
+            return c == Codec.Snappy || c == Codec.Gzip || c == Codec.Brotli || c == Codec.Zstd;
 #endif
         }
 
