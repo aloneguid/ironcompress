@@ -46,6 +46,7 @@ public class IronTest {
 
     [Theory]
     [InlineData(Codec.Gzip)]
+    [InlineData(Codec.Zstd)]
     public void EncodeDecodeManaged(Codec codec) {
         Iron iron = new Iron(ArrayPool<byte>.Shared);
         iron.ForcePlatform = Platform.Managed;
@@ -53,7 +54,7 @@ public class IronTest {
         byte[] input = new byte[4];
         _rnd.NextBytes(input);
 
-        using(IronCompressResult compressed = _iron.Compress(codec, input.AsSpan())) {
+        using(IronCompressResult compressed = iron.Compress(codec, input.AsSpan())) {
             using(IronCompressResult uncompressed = _iron.Decompress(codec, compressed, input.Length)) {
                 Assert.Equal(input, uncompressed.AsSpan().ToArray());
             }
