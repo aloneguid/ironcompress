@@ -11,7 +11,7 @@ bool run(int method, char* buffer, size_t buffer_length) {
     compressed.resize(len);
 
     ok = compress(true, method, buffer, buffer_length,
-        &compressed[0], &len, 2);
+        &compressed[0], &len, compression_level::best);
 
     vector<byte> decompressed;
     int32_t bl1 = buffer_length;
