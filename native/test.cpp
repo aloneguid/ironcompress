@@ -5,7 +5,7 @@ using namespace std;
 
 bool run(int method, char* buffer, size_t buffer_length) {
     int32_t len{0};
-    bool ok = compress(true, method, buffer, buffer_length, nullptr, &len, 2);
+    bool ok = compress(true, method, buffer, buffer_length, nullptr, &len, compression_level::best);
 
     vector<char> compressed;
     compressed.resize(len);
@@ -17,7 +17,7 @@ bool run(int method, char* buffer, size_t buffer_length) {
     int32_t bl1 = buffer_length;
     decompressed.resize(buffer_length);
     ok = compress(false, method, &compressed[0], len,
-       (char*)&decompressed[0], &bl1, 2);
+       (char*)&decompressed[0], &bl1, compression_level::best);
 
     return ok;
 }
