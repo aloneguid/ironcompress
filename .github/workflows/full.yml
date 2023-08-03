@@ -30,9 +30,9 @@ jobs:
       matrix:
         os: [ubuntu-20.04, windows-latest, macos-latest]
         arch: [x64, arm64]
-        include:
-          - os: windows-latest
-            arch: x86
+        #include:
+        #  - os: windows-latest
+        #    arch: x86
         exclude:
           # no build agent for Windows ARM
           - os: windows-latest
