@@ -27,7 +27,7 @@ int main() {
 
     //run(1, bytes, 3);
     //run(2, bytes, 3);
-    run(4, bytes, 3);
+    run(6, bytes, 3);
 
     return 0;
 }

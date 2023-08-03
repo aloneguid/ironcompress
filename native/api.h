@@ -12,6 +12,12 @@
 # define EXPORTED
 #endif
 
+enum class compression_level : int32_t {
+    fastest = 1,
+    balanced = 2,
+    best = 3
+};
+
 extern "C"
 {
    /**
@@ -32,7 +38,7 @@ extern "C"
       int32_t input_buffer_size,
       char* output_buffer,
       int32_t* output_buffer_size,
-      int32_t compression_level);
+      compression_level compression_level);
 
    /**
     * @brief Used to just ping the library to test it's available at all
