@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using ZstdSharp;
 
 namespace IronCompress {
 
@@ -38,7 +39,7 @@ namespace IronCompress {
 #if NETSTANDARD2_0
             return c == Codec.Snappy || c == Codec.Gzip;
 #else
-            return c == Codec.Snappy || c == Codec.Gzip || c == Codec.Brotli;
+            return c == Codec.Snappy || c == Codec.Gzip || c == Codec.Brotli || c == Codec.Zstd;
 #endif
         }
 
@@ -194,6 +195,13 @@ namespace IronCompress {
                         : BrotliUncompress(input);
                     return new IronCompressResult(result, codec, false, -1, null);
 #endif
+
+                case Codec.Zstd:
+                    result = compressOrDecompress
+                        ? ZstdManagedCompress(input, compressionLevel)
+                        : ZstdManagedUncompress(input);
+                    return new IronCompressResult(result, codec, false, -1, null);
+
                 default:
                     throw new NotSupportedException($"managed compression for {codec} is not supported");
             }
@@ -225,6 +233,22 @@ namespace IronCompress {
                     return compressedStream.ToArray();
                 }
             }
+        }
+
+        private static byte[] ZstdManagedCompress(ReadOnlySpan<byte> data, CompressionLevel compressionLevel) {
+
+            int level = compressionLevel switch {
+                CompressionLevel.Optimal => 3,
+                CompressionLevel.Fastest => 1,
+                CompressionLevel.NoCompression => 1,
+#if NET6_0_OR_GREATER
+                CompressionLevel.SmallestSize => 19,
+#endif
+                _ => 0
+            };
+
+            using var compressor = new ZstdSharp.Compressor(level);
+            return compressor.Wrap(data).ToArray();
         }
 
 #if !NETSTANDARD2_0
@@ -260,6 +284,11 @@ namespace IronCompress {
                     }
                 }
             }
+        }
+
+        private static byte[] ZstdManagedUncompress(ReadOnlySpan<byte> data) {
+            using var decompressor = new ZstdSharp.Decompressor();
+            return decompressor.Unwrap(data).ToArray();
         }
 
 #if !NETSTANDARD2_0
