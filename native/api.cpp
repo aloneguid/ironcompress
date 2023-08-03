@@ -13,6 +13,20 @@ using namespace std;
 
 bool lzo_initialised{ false };
 
+// taken from https://github.com/lz4/lz4/blob/839edadd09bd653b7e9237a2fbf405d9e8bfc14e/lib/lz4.c#L48C1-L58C35
+/*
+ * LZ4_ACCELERATION_DEFAULT :
+ * Select "acceleration" for LZ4_compress_fast() when parameter value <= 0
+ */
+#define LZ4_ACCELERATION_DEFAULT 1
+ /*
+  * LZ4_ACCELERATION_MAX :
+  * Any "acceleration" value higher than this threshold
+  * get treated as LZ4_ACCELERATION_MAX instead (fix #876)
+  */
+#define LZ4_ACCELERATION_MAX 65537
+
+
 bool compress_snappy(
    bool compress,
    char* input_buffer,
@@ -52,7 +66,7 @@ bool compress_zstd(
     int input_buffer_size,
     char* output_buffer,
     int* output_buffer_size,
-	int compression_level) {
+	compression_level compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
             *output_buffer_size = ZSTD_compressBound(input_buffer_size);
@@ -64,9 +78,9 @@ bool compress_zstd(
 
     if(compress) {
 		auto level = ZSTD_btultra2;
-		if(compression_level == 1){
+		if(compression_level == compression_level::fastest){
 			level = ZSTD_fast;
-		} else if(compression_level == 2){
+		} else if(compression_level == compression_level::balanced){
 			level = ZSTD_btopt;
 		}
 		
@@ -84,7 +98,7 @@ bool compress_brotli(
     int input_buffer_size,
     char* output_buffer,
     int* output_buffer_size,
-	int compression_level) {
+	compression_level compression_level) {
 
     if(output_buffer == nullptr) {
 
@@ -98,9 +112,9 @@ bool compress_brotli(
 
     if(compress) {
 		auto level = BROTLI_MAX_QUALITY;
-		if(compression_level == 1){
+		if(compression_level == compression_level::fastest){
 			level = BROTLI_MIN_QUALITY;
-		} else if(compression_level == 2){
+		} else if(compression_level == compression_level::balanced){
 			level = BROTLI_MAX_QUALITY/2;
 		}
         size_t compressed_size = *output_buffer_size;
@@ -197,7 +211,7 @@ bool compress_lz4(
     int input_buffer_size,
     char* output_buffer,
     int* output_buffer_size,
-	int compression_level) {
+    compression_level compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
             *output_buffer_size = LZ4_compressBound(input_buffer_size);
@@ -209,14 +223,13 @@ bool compress_lz4(
     }
 
     if(compress) {
-		auto level = 65537;
-		if(compression_level == 1){
-			level = 1;
-		} else if(compression_level == 2){
-			level = 32768;
-		}
+        int acceleration = LZ4_ACCELERATION_DEFAULT;
+        if(compression_level == compression_level::fastest)
+            acceleration = LZ4_ACCELERATION_MAX;
+        else if(compression_level == compression_level::balanced)
+            acceleration = LZ4_ACCELERATION_MAX / 2;
 
-        *output_buffer_size = LZ4_compress_fast(input_buffer, output_buffer, input_buffer_size, *output_buffer_size, level);
+        *output_buffer_size = LZ4_compress_fast(input_buffer, output_buffer, input_buffer_size, *output_buffer_size, acceleration);
         return *output_buffer_size != 0;
     } else {
         *output_buffer_size = LZ4_decompress_safe(input_buffer, output_buffer, input_buffer_size, *output_buffer_size);
@@ -227,7 +240,7 @@ bool compress_lz4(
 }
 
 bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
-    char* output_buffer, int32_t* output_buffer_size, int32_t compression_level) {
+    char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
     switch(codec) {
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
