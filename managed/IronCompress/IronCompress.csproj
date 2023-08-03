@@ -37,7 +37,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
         <PackageReference Include="Snappier" Version="1.1.1" />
-        <PackageReference Include="ZstdSharp.Port" Version="0.7.1" />
+        <PackageReference Include="ZstdSharp.Port" Version="0.7.2" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
