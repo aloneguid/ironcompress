@@ -223,11 +223,12 @@ bool compress_lz4(
     }
 
     if(compress) {
+        // see https://github.com/aloneguid/ironcompress/pull/19
         int acceleration = LZ4_ACCELERATION_DEFAULT;
         if(compression_level == compression_level::fastest)
-            acceleration = LZ4_ACCELERATION_MAX;
+            acceleration = 50;
         else if(compression_level == compression_level::balanced)
-            acceleration = LZ4_ACCELERATION_MAX / 2;
+            acceleration = 2;
 
         *output_buffer_size = LZ4_compress_fast(input_buffer, output_buffer, input_buffer_size, *output_buffer_size, acceleration);
         return *output_buffer_size != 0;
