@@ -39,8 +39,8 @@ namespace IronCompress {
         public Span<byte> AsSpan() =>
             _data.AsSpan(0, Length);
 
-        public MemoryStream AsStream() =>
-            MemoryStream(_data, 0, Length, writable:false);
+        public MemoryStream CreateMemoryStream() =>
+            new MemoryStream(_data, 0, Length, writable: false);
 
         public static implicit operator Span<byte>(IronCompressResult r) => r.AsSpan();
 
