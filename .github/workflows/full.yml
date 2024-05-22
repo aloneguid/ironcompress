@@ -169,9 +169,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
-          3.1.x
           6.0.x
-          7.0.x
+          8.0.x
 
     - name: build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
@@ -205,9 +204,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: |
-          3.1.x
           6.0.x
-          7.0.x
+          8.0.x
 
     - name: Build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
@@ -240,6 +238,6 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           name: ${{ env.VERSION }}
-          files: "pub/managed/*.nupgkg"
+          files: "pub/managed/*.nupkg"
           generate_release_notes: true
 
