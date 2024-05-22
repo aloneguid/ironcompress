@@ -65,9 +65,11 @@
         </Content>
 
         <!-- Mac -->
+        <!--
         <Content Include="..\..\native\ubin\runtimes\osx-x64\native\libnironcompress.dylib" Link="libnironcompress.dylib" PackagePath="runtimes/osx-x64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        -->
         <Content Include="..\..\native\ubin\runtimes\osx-arm64\native\libnironcompress.dylib" PackagePath="runtimes/osx-arm64/native">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

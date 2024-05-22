@@ -37,6 +37,9 @@ jobs:
           # no build agent for Windows ARM
           - os: windows-latest
             arch: arm64
+          # no more x64 agent available on GitHub Actions
+          - os: macos-latest
+            arch: x64
       fail-fast: false
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
 
@@ -107,7 +110,7 @@ jobs:
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
       with:
-        committish: 980ec0f49d81f794778386f7bd518b2cc9c092f0 
+        committish: 261dd6831673d3b07e5118261f7e161a21d1a759 
         # set to false to clear any cache in case of build errors
         cache: false
 
