@@ -143,7 +143,6 @@ jobs:
         path: |
           native/ubin/**/*
 
-
   test-managed:
     runs-on: ${{ matrix.os }}
     needs: make-fat-native
@@ -173,7 +172,7 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: native-${{ matrix.dotnet_rid }}
+        name: native
         path: native/ubin/
 
     - name: debug1

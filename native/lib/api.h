@@ -18,6 +18,15 @@ enum class compression_level : int32_t {
     best = 3
 };
 
+enum class compression_codec : int32_t {
+    snappy = 1,
+    zstd = 2,
+    gzip = 3,
+    brotli = 4,
+    lzo = 5,
+    lz4 = 6
+};
+
 extern "C"
 {
    /**
