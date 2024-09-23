@@ -121,7 +121,7 @@ jobs:
         if-no-files-found: error
 
   # create a unified fat native binary
-  create-fat-native:
+  make-fat-native:
     runs-on: ubuntu-latest
     needs: build-native
     steps:
@@ -145,7 +145,7 @@ jobs:
 
   test-managed:
     runs-on: ${{ matrix.os }}
-    needs: build-native
+    needs: make-fat-native
     strategy:
       matrix:
         include:
@@ -197,7 +197,7 @@ jobs:
       run: dotnet test managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
   build-managed:
-    needs: build-native
+    needs: make-fat-native
     runs-on: ubuntu-latest
     steps:
 
@@ -207,9 +207,8 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        pattern: native-*
+        name: native
         path: native/ubin/
-        merge-multiple: true
 
     - name: debug
       run: ls -R
