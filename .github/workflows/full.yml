@@ -2,8 +2,8 @@ name: 'Full Flow'
 
 env:
   VERSION: 1.5.3
-  # PACKAGE_SUFFIX: '-pre.1'
-  PACKAGE_SUFFIX: ''
+  PACKAGE_SUFFIX: '-pre.1'
+  # PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
   VCPKG_HASH: 0f88ecb8528605f91980b90a2c5bad88e3cb565f
@@ -46,7 +46,7 @@ jobs:
 
     steps:
       
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
@@ -153,11 +153,11 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: native
         path: native/ubin/
@@ -188,11 +188,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         name: native
         path: native/ubin/
@@ -211,7 +211,7 @@ jobs:
     - name: Build
       run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Collect Artifacts
       with:
         name: managed
@@ -225,7 +225,7 @@ jobs:
     environment: nuget
     steps:
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: managed
           path: pub/managed/
