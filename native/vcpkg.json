@@ -5,6 +5,7 @@
         "snappy",
         "zstd",
         "lz4",
-        "brotli"
+        "brotli",
+        "gtest"
     ]
 }
