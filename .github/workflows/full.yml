@@ -129,6 +129,7 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         pattern: native-*
+        path: native/ubin/
         merge-multiple: true
 
     - name: debug
