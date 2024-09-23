@@ -60,15 +60,21 @@ jobs:
       with:
         submodules: true
 
-    - name: vcpkg setup
+    - name: env (windows)
+      if: runner.os == 'Windows'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $env:GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $env:GITHUB_ENV
         echo "VCPKG_CONFIG=${{ matrix.vcpkg_config }}" >> $env:GITHUB_ENV
-
-    - name: .net rid
-      run: |
         echo "DOTNET_RID=${{ matrix.dotnet_rid }}" >> $env:GITHUB_ENV
+
+    - name: env
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      run: |
+        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $GITHUB_ENV
+        echo "VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $GITHUB_ENV
+        echo "VCPKG_CONFIG=${{ matrix.vcpkg_config }}" >> $GITHUB_ENV
+        echo "DOTNET_RID=${{ matrix.dotnet_rid }}" >> $GITHUB_ENV
 
     - name: Linux ARM
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
