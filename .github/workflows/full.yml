@@ -29,20 +29,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-latest, macos-latest]
+        os: [ { full: ubuntu-20.04, short: linux }, { full: windows-latest, short: win }, { full: macos-latest, short: osx } ]
         arch: [x64, arm64]
         #include:
         #  - os: windows-latest
         #    arch: x86
         exclude:
           # no build agent for Windows ARM
-          - os: windows-latest
+          - os: { full: windows-latest, short: win }
             arch: arm64
           # no more x64 agent available on GitHub Actions
-          - os: macos-latest
+          - os: { full: macos-latest, short: osx }
             arch: x64
       fail-fast: false
-    name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
+    name: 'build: ${{ matrix.os.short }} (${{ matrix.arch }})'
 
     steps:
       
@@ -51,21 +51,21 @@ jobs:
         submodules: true
 
     - name: Windows Env
-      if: matrix.os == 'windows-latest'
+      if: runner.os == 'Windows'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-windows-static" >> $env:GITHUB_ENV
         echo "VCPKG_CONFIG=Release" >> $env:GITHUB_ENV
 
     - name: Linux Env
-      if: matrix.os == 'ubuntu-20.04'
+      if: runner.os == 'Linux'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-linux" >> $GITHUB_ENV
         echo "VCPKG_CONFIG=RelWithDebInfo" >> $GITHUB_ENV
 
     - name: MacOS Env
-      if: matrix.os == 'macos-latest'
+      if: runner.os == 'macOS'
       run: |
         echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
         echo "VCPKG_TRIPLET=${{ matrix.arch }}-osx" >> $GITHUB_ENV
@@ -134,7 +134,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       name: Collect Artifacts
       with:
-        name: native
+        name: native-${{ matrix.os.short }}-${{ matrix.arch }})
         path: |
           native/ubin/**/*
         if-no-files-found: error
