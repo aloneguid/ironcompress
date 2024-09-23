@@ -26,7 +26,7 @@ on:
 jobs:
   # builds native codecs binary for all supported OSes
   build-native:
-    runs-on: ${{ matrix.os.full }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
