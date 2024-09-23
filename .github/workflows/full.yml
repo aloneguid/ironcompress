@@ -131,12 +131,13 @@ jobs:
       run: ls -R
       working-directory: native
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       name: Collect Artifacts
       with:
         name: native
         path: |
           native/ubin/**/*
+        if-no-files-found: error
 
   test-managed:
     runs-on: ${{ matrix.os }}

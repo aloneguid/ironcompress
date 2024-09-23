@@ -1,4 +1,5 @@
-#include "api.h"
+#include "../lib/api.h"
+#include <gtest/gtest.h>
 #include <vector>
 
 using namespace std;
@@ -22,12 +23,7 @@ bool run(int method, char* buffer, size_t buffer_length) {
     return ok;
 }
 
-int main() {
+TEST(Compress, LZ4) {
     char bytes[] = {'a', 'b', 'c'};
-
-    //run(1, bytes, 3);
-    //run(2, bytes, 3);
-    run(6, bytes, 3);
-
-    return 0;
+    EXPECT_TRUE(run(6, bytes, 3));
 }

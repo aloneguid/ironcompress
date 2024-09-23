@@ -27,3 +27,4 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 add_subdirectory(lib)
+add_subdirectory(test)
