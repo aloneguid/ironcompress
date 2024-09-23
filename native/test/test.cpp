@@ -23,7 +23,27 @@ bool run(int method, char* buffer, size_t buffer_length) {
     return ok;
 }
 
-TEST(Compress, LZ4) {
+TEST(Roundtrip, Snappy_1) {
+    char bytes[] = {'a', 'b', 'c'};
+    EXPECT_TRUE(run(1, bytes, 3));
+}
+
+TEST(Roundtrip, Zstd_2) {
+    char bytes[] = {'a', 'b', 'c'};
+    EXPECT_TRUE(run(2, bytes, 3));
+}
+
+TEST(Roundtrip, Brotli_4) {
+    char bytes[] = {'a', 'b', 'c'};
+    EXPECT_TRUE(run(4, bytes, 3));
+}
+
+TEST(Roundtrip, Lzo_5) {
+    char bytes[] = {'a', 'b', 'c'};
+    EXPECT_TRUE(run(5, bytes, 3));
+}
+
+TEST(Roundtrip, LZ4_6) {
     char bytes[] = {'a', 'b', 'c'};
     EXPECT_TRUE(run(6, bytes, 3));
 }
