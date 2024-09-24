@@ -21,7 +21,7 @@ namespace IronCompress {
                 // cache the results, as it won't change during the lifetime of the app
                 if(_isNativeLibraryAvailable == null) {
                     try {
-                        Native.ping();
+                        Native.iron_ping();
                         _isNativeLibraryAvailable = true;
 
                     } catch(DllNotFoundException) {
@@ -44,7 +44,8 @@ namespace IronCompress {
         }
 
         static bool SupportsNative(Codec c) {
-            return IsNativeLibraryAvailable && c != Codec.Gzip;
+            //return IsNativeLibraryAvailable && c != Codec.Gzip;
+            return true;
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace IronCompress {
                 fixed(byte* inputPtr = input) {
                     // get output buffer size into "len"
                     if(outputLength == null) {
-                        bool ok = Native.compress(
+                        bool ok = Native.iron_compress(
                            compressOrDecompress,
                            (int)codec, inputPtr, input.Length, null, &len, level);
                         if(!ok) {
@@ -147,7 +148,7 @@ namespace IronCompress {
 
                     fixed(byte* outputPtr = output) {
                         try {
-                            bool ok = Native.compress(
+                            bool ok = Native.iron_compress(
                                compressOrDecompress,
                                (int)codec, inputPtr, input.Length, outputPtr, &len, level);
 

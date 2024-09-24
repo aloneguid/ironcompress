@@ -80,7 +80,7 @@ bool compress_zstd(
 		auto level = ZSTD_btultra2;
 		if(compression_level == compression_level::fastest){
 			level = ZSTD_fast;
-		} else if(compression_level == compression_level::balanced){
+		} else if(compression_level == compression_level::balanced) {
 			level = ZSTD_btopt;
 		}
 		
@@ -92,7 +92,7 @@ bool compress_zstd(
     return true;
 }
 
-// zlib tutorial: https://www.codeguru.com/cplusplus/zlib-add-industrial-strength-compression-to-your-c-c-apps/
+// zlib tutorial: https://bobobobo.wordpress.com/2008/02/23/how-to-use-zlib/
 bool compress_gzip(
     bool compress,
     char* input_buffer,
@@ -314,4 +314,4 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
     }
 }
 
-bool ping() { return true; }
+bool iron_ping() { return true; }

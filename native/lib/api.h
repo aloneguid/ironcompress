@@ -48,4 +48,9 @@ extern "C"
       char* output_buffer,
       int32_t* output_buffer_size,
       compression_level compression_level);
+
+   /**
+    * @brief Used to just ping the library to test it's available at all
+    */
+   EXPORTED bool iron_ping();
 }
