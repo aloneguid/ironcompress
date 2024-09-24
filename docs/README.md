@@ -2,7 +2,7 @@
 
  [![NuGet](https://img.shields.io/nuget/v/IronCompress.svg)](https://www.nuget.org/packages/IronCompress)
 
-<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for **Gzip** and **Brotli** (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](https://github.com/aloneguid/IronSnappy). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
+<img src="icon.png" width=80 height=80 align="left"/> C++ compression methods joined together in one native library, cross-compiled for multiple architectures and exposed as a .NET library. .NET has built-in support for **Gzip** and **Brotli** (which is what this library is using) but other compression methods are either available only as native libraries hard (impossible for some) to consume, or ill-ported C# alternatives. In fact, I myself [wrote one of them](https://www.aloneguid.uk/projects/ironsnappy/). Using native, original implementations is the way to go if you want to keep performance, security, and features up to date.
 
 The library supports the following formats:
 
@@ -15,26 +15,26 @@ The library supports the following formats:
 
 And following architectures:
 
-| Format     | Managed                                         |      | Windows | Linux | Mac OSX | ◀️ OS<br />Arch 🔽 |
-| ---------- | ----------------------------------------------- | ---- | ------- | ----- | ------- | ---------------- |
-| **Snappy** | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Zstd**   | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                |      | ⛔       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup> |      | ✅       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **LZO**    | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **LZ4**    | ⛔                                               |      | ✅       | ⛔     | ⛔       | x32              |
-|            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
-|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
+| Format     | Managed                                                      |      | Windows | Linux | Mac OSX | ◀️ OS<br />Arch 🔽 |
+| ---------- | ------------------------------------------------------------ | ---- | ------- | ----- | ------- | ---------------- |
+| **Snappy** | ✅<br />*<sup>via [Snappier](https://github.com/brantburnett/Snappier) </sup>* |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+| **Zstd**   | ✅<br />*<sup>via [ZstdSharp](https://github.com/oleg-st/ZstdSharp)</sup>* |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                             |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+| **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup>              |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+| **LZO**    | ⛔                                                            |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+| **LZ4**    | ⛔                                                            |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
 
 I periodically update to the latest binaries. All the binaries are compiled from C/C++ source with `CMake` for major systems i.e. Linux, Windows and Mac OSX. They are then wrapped safely with a .NET interface.
 
