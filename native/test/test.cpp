@@ -20,6 +20,8 @@ bool run(int method, char* buffer, size_t buffer_length) {
     ok = iron_compress(false, method, &compressed[0], len,
        (char*)&decompressed[0], &bl1, compression_level::best);
 
+    // todo: compare buffer sizes
+
     return ok;
 }
 
