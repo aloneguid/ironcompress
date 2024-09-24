@@ -7,6 +7,7 @@
 #include <vector>
 #include "brotli/encode.h"
 #include "brotli/decode.h"
+//#include "zlib-ng.h"
 //#include <iostream>
 
 using namespace std;
@@ -91,6 +92,52 @@ bool compress_zstd(
 
     return true;
 }
+
+/*
+bool compress_gzip(
+    bool compress,
+    char* input_buffer,
+    int input_buffer_size,
+    char* output_buffer,
+    int* output_buffer_size,
+    compression_level compression_level) {
+
+    if(output_buffer == nullptr) {
+
+        if(compress) {
+            // get output buffer size for compression with zlib-ng
+            *output_buffer_size = zng_compressBound(input_buffer_size);
+            return true;
+        } else {
+            // get output buffer size for decompression with zlib-ng
+            //*output_buffer_size = zng_deflateBound(input_buffer, input_buffer_size);
+            return false;
+        }
+    }
+
+    if(compress) {
+
+        int level = Z_BEST_COMPRESSION;
+        if(compression_level == compression_level::fastest)
+            level = Z_BEST_SPEED;
+        else if(compression_level == compression_level::balanced)
+            level = Z_DEFAULT_COMPRESSION;
+
+        // compress with zlib-ng
+
+        size_t out_size{0};
+        *output_buffer_size = zng_compress2(
+            (uint8_t*)output_buffer,
+            &out_size,
+            (const uint8_t*)input_buffer,
+            input_buffer_size,
+            level);
+        *output_buffer_size = out_size;
+        return *output_buffer_size != 0;
+    } 
+
+    return false;
+}*/
 
 bool compress_brotli(
     bool compress,
@@ -247,7 +294,8 @@ bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_bu
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
         case 2:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
-            // 3 - gzip
+        //case 3:
+            //return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 4:
             return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 5:

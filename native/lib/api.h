@@ -32,7 +32,7 @@ extern "C"
    /**
     * @brief Encode (compress) or decompress
     * @param compress When true this is compression, otherwise decompression.
-    * @param codec 1 - snappy, 2 - zstd, 3 - n/a, 4 - brotli, 5 - lzo, 6 - lz4
+    * @param codec 1 - snappy, 2 - zstd, 3 - gzip, 4 - brotli, 5 - lzo, 6 - lz4
     * @param input_buffer If this is set to nullptr, the function sets output_buffer_size to required maximum size of the compressed data.
     * @param input_buffer_size 
     * @param output_buffer When output_buffer is nullptr, this is set to maximum buffer size required. Otherwise, to the size of the actual compressed data written to output_buffer.

@@ -33,6 +33,11 @@ TEST(Roundtrip, Zstd_2) {
     EXPECT_TRUE(run(2, bytes, 3));
 }
 
+TEST(Roundtrip, Zlib_3) {
+    char bytes[] = {'a', 'b', 'c'};
+    EXPECT_TRUE(run(3, bytes, 3));
+}
+
 TEST(Roundtrip, Brotli_4) {
     char bytes[] = {'a', 'b', 'c'};
     EXPECT_TRUE(run(4, bytes, 3));
