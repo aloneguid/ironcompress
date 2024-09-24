@@ -8,6 +8,7 @@ find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
 find_package(lz4 CONFIG REQUIRED)
 find_package(unofficial-brotli CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -26,6 +27,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     lz4::lz4
     unofficial::brotli::brotlienc
     unofficial::brotli::brotlidec
+    ZLIB::ZLIB
     GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "../../minilzo")

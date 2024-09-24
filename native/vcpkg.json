@@ -6,7 +6,7 @@
         "zstd",
         "lz4",
         "brotli",
-        "zlib-ng",
+        "zlib",
         "gtest"
     ]
 }

@@ -8,10 +8,7 @@ find_package(Snappy CONFIG REQUIRED)
 find_package(zstd CONFIG REQUIRED)
 find_package(lz4 CONFIG REQUIRED)
 find_package(unofficial-brotli CONFIG REQUIRED)
-
-#find_package(PkgConfig)
-#pkg_check_modules(zlib-ng REQUIRED IMPORTED_TARGET GLOBAL zlib-ng>=2.0)
-find_package(zlib-ng CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 
 add_library (${PROJECT_NAME} SHARED "api.cpp" "../../minilzo/minilzo.c")
 set_property(TARGET ${PROJECT_NAME} PROPERTY
@@ -29,7 +26,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     zstd::libzstd_static
     lz4::lz4
     unofficial::brotli::brotlienc
-    unofficial::brotli::brotlidec)
+    unofficial::brotli::brotlidec
+    ZLIB::ZLIB)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "../../minilzo")
 

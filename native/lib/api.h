@@ -40,7 +40,7 @@ extern "C"
     * @param compression_level 1 - fastest, 2 - balanced, 3 - best
     * @return 
    */
-   EXPORTED bool compress(
+   EXPORTED bool iron_compress(
       bool compress,
       int32_t codec,
       char* input_buffer,
@@ -48,9 +48,4 @@ extern "C"
       char* output_buffer,
       int32_t* output_buffer_size,
       compression_level compression_level);
-
-   /**
-    * @brief Used to just ping the library to test it's available at all
-   */
-   EXPORTED bool ping();
 }
