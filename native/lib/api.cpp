@@ -131,6 +131,8 @@ bool compress_gzip(
             input_buffer_size,
             Z_BEST_COMPRESSION);
 
+        *output_buffer_size = compressed_size;
+
         return Z_OK == r;
     } else {
         // decompress with zlib

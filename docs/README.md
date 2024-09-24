@@ -23,7 +23,9 @@ And following architectures:
 | **Zstd**   | ✅                                               |      | ✅       | ⛔     | ⛔       | x32              |
 |            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
-| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                |      |         |       |         |                  |
+| **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                |      | ⛔       | ⛔     | ⛔       | x32              |
+|            |                                                 |      | ✅       | ✅     | ✅       | x64              |
+|            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
 | **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup> |      | ✅       | ⛔     | ⛔       | x32              |
 |            |                                                 |      | ✅       | ✅     | ⛔       | x64              |
 |            |                                                 |      | ⛔       | ✅     | ✅       | ARM64            |
@@ -73,7 +75,7 @@ using (IronCompressResult uncompressed = iron.Decompress(Codec.Snappy, compresse
 
 As with compression, this returns `Result` with decompressed data. It's worth nothing one important difference - decompression needs the length of output buffer specified as third parameter (`input.Length`). Although some decompressors can guess uncompressed length more or less correct, the others won't know it beforehand. In reality this problem is solved by using a framing format that adds metadata about resulting length, however many compression formats do not define that and consider compressed packets to be implementation specific.
 
-You will need more or less recent C++ compiler, `CMake` and `.NET SDK 6` to build the code.
+You will need more or less recent C++ compiler, `CMake` and `.NET SDK 8` to build the code.
 
 
 ## Building
