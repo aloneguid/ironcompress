@@ -7,7 +7,7 @@
 #include <vector>
 #include "brotli/encode.h"
 #include "brotli/decode.h"
-//#include <iostream>
+#include "zlib.h"
 
 using namespace std;
 
@@ -80,7 +80,7 @@ bool compress_zstd(
 		auto level = ZSTD_btultra2;
 		if(compression_level == compression_level::fastest){
 			level = ZSTD_fast;
-		} else if(compression_level == compression_level::balanced){
+		} else if(compression_level == compression_level::balanced) {
 			level = ZSTD_btopt;
 		}
 		
@@ -90,6 +90,62 @@ bool compress_zstd(
     }
 
     return true;
+}
+
+// zlib tutorial: https://bobobobo.wordpress.com/2008/02/23/how-to-use-zlib/
+bool compress_gzip(
+    bool compress,
+    char* input_buffer,
+    int input_buffer_size,
+    char* output_buffer,
+    int* output_buffer_size,
+    compression_level compression_level) {
+
+    if(output_buffer == nullptr) {
+
+        if(compress) {
+            // get output buffer size for compression with zlib
+            *output_buffer_size = compressBound(input_buffer_size);
+            return true;
+        } else {
+            // don't know buffer size for decompression, it should be externally stored somewhere
+            return false;
+        }
+    }
+
+    if(compress) {
+        // compress with zlib
+        uLongf compressed_size = *output_buffer_size;
+
+        // convert level
+        int level = Z_BEST_COMPRESSION;
+        if(compression_level == compression_level::fastest)
+            level = Z_BEST_SPEED;
+        else if(compression_level == compression_level::balanced)
+            level = Z_DEFAULT_COMPRESSION;
+
+        // compress
+        int r = compress2((Bytef*)output_buffer, 
+            &compressed_size,
+            (const Bytef*)input_buffer,
+            input_buffer_size,
+            Z_BEST_COMPRESSION);
+
+        *output_buffer_size = compressed_size;
+
+        return Z_OK == r;
+    } else {
+        // decompress with zlib
+        uLongf decompressed_size = *output_buffer_size;
+        auto r = uncompress((Bytef*)output_buffer,
+            &decompressed_size,
+            (const Bytef*)input_buffer,
+            input_buffer_size);
+        *output_buffer_size = decompressed_size;
+        return Z_OK == r;
+    }
+
+    return false;
 }
 
 bool compress_brotli(
@@ -240,14 +296,15 @@ bool compress_lz4(
     return false;
 }
 
-bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
+bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
     char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
     switch(codec) {
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
         case 2:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
-            // 3 - gzip
+        case 3:
+            return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 4:
             return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 5:
@@ -259,4 +316,4 @@ bool compress(bool compress, int32_t codec, char* input_buffer, int32_t input_bu
     }
 }
 
-bool ping() { return true; }
+bool iron_ping() { return true; }

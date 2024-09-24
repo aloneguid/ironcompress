@@ -38,7 +38,7 @@ namespace IronCompress {
 #endif
 
         [DllImport(LibName)]
-        internal static extern unsafe bool compress(bool compress,
+        internal static extern unsafe bool iron_compress(bool compress,
             int codec,
             byte* inputBuffer,
             int inputBufferSize,
@@ -47,9 +47,6 @@ namespace IronCompress {
             int compressionLevel);
 
         [DllImport(LibName)]
-        internal static extern bool ping();
-
-        [DllImport(LibName)]
-        internal static extern bool is_supported(int codec);
+        internal static extern bool iron_ping();
     }
 }

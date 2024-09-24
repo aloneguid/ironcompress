@@ -55,7 +55,7 @@ public class IronTest {
         _rnd.NextBytes(input);
 
         using(IronCompressResult compressed = iron.Compress(codec, input.AsSpan())) {
-            using(IronCompressResult uncompressed = _iron.Decompress(codec, compressed, input.Length)) {
+            using(IronCompressResult uncompressed = iron.Decompress(codec, compressed, input.Length)) {
                 Assert.Equal(input, uncompressed.AsSpan().ToArray());
             }
         }

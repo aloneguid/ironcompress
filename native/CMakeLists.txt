@@ -1,59 +1,33 @@
-﻿cmake_minimum_required (VERSION 3.15)
+﻿cmake_minimum_required (VERSION 3.20)
 cmake_policy(SET CMP0091 NEW)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project ("ironcompress" VERSION 0.0)
 
-find_package(Snappy CONFIG REQUIRED)
-find_package(zstd CONFIG REQUIRED)
-find_package(lz4 CONFIG REQUIRED)
-find_package(unofficial-brotli CONFIG REQUIRED)
-
-add_library (nironcompress SHARED "api.cpp" "../minilzo/minilzo.c")
-set_property(TARGET nironcompress PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-add_executable(tester "api.cpp" "../minilzo/minilzo.c" "test.cpp")
-set_property(TARGET tester PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-   # MSVC
-    target_compile_options(nironcompress PRIVATE /EHsc /MTd /W2 /c)
-    # Set the DLLEXPORT variable to export symbols
-    target_compile_definitions(nironcompress PRIVATE WIN_EXPORT)
+# Conditionally set CMAKE_MSVC_RUNTIME_LIBRARY based on VCPKG_TRIPLET
+# Retrieve the VCPKG_TRIPLET environment variable
+string(TOLOWER "$ENV{VCPKG_TRIPLET}" VCPKG_TRIPLET_LOWER)
+if(VCPKG_TRIPLET_LOWER STREQUAL "x64-windows")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-target_link_libraries(nironcompress PRIVATE 
-    Snappy::snappy
-    zstd::libzstd_static
-    lz4::lz4
-    unofficial::brotli::brotlienc
-    unofficial::brotli::brotlidec)
-target_link_libraries(tester PRIVATE 
-    Snappy::snappy
-    zstd::libzstd_static
-    lz4::lz4
-    unofficial::brotli::brotlienc
-    unofficial::brotli::brotlidec)
-
-target_include_directories(nironcompress PRIVATE "../minilzo")
-target_include_directories(tester PRIVATE "../minilzo")
-
-# https://atomheartother.github.io/c++/2018/07/12/CPPDynLib.html
-
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+# The cool "edit & continue" feature of MSVC is disabled by default in CMake.
+# https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170#edit-and-continue-for-cmake-projects
+# enable globally: https://stackoverflow.com/a/76254117/80858
+if(MSVC AND CMAKE_BUILD_TYPE MATCHES Debug)
+    add_compile_options("/ZI")
+    add_link_options("/INCREMENTAL")
 endif()
 
-# https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#generator-expression-reference
-add_custom_command(
-    TARGET nironcompress 
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        $<TARGET_FILE:nironcompress>
-        ${CMAKE_SOURCE_DIR}/ubin/runtimes/$ENV{DOTNET_RID}/native/$<TARGET_FILE_NAME:nironcompress>
-)
+if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
+    add_link_options("/OPT:REF")
+endif()
+
+add_subdirectory(lib)
+# only build tests if SUPPRESS_TEST environment variable is not set
+if(NOT DEFINED ENV{SUPPRESS_TEST})
+    add_subdirectory(test)
+endif()
