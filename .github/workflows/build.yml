@@ -74,6 +74,11 @@ jobs:
         echo "VCPKG_CONFIG=${{ matrix.vcpkg_config }}" >> $env:GITHUB_ENV
         echo "DOTNET_RID=${{ matrix.dotnet_rid }}" >> $env:GITHUB_ENV
 
+    - name: Windows x86
+      if: runner.os == 'Windows' && matrix.arch == 'x86'
+      run: |
+        echo "NO_SNAPPY" >> $env:GITHUB_ENV
+
     - name: env
       if: runner.os == 'Linux' || runner.os == 'macOS'
       run: |
