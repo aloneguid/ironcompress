@@ -121,7 +121,7 @@ jobs:
 
     - name: test
       run: ctest
-      working-directory: native
+      working-directory: native/build
 
     - name: debug
       run: ls -R
