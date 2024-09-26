@@ -18,7 +18,7 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 add_subdirectory(lib)
-# only build tests if SUPPRESS_TEST environment variable is not set
-if(NOT DEFINED ENV{SUPPRESS_TEST})
+# only build tests if NO_TESTS environment variable is not set
+if(NOT DEFINED ENV{NO_TESTS})
     add_subdirectory(test)
 endif()
