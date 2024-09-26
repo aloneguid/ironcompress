@@ -299,8 +299,10 @@ bool compress_lz4(
 bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
     char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
     switch(codec) {
+#ifndef NO_SNAPPY
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+#endif
         case 2:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 3:
@@ -317,7 +319,15 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
 }
 
 bool iron_is_supported(compression_codec codec) {
+    if(codec == compression_codec::snappy) {
+#ifdef NO_SNAPPY
+        return false;
+#endif
+    }
+
     return true;
 }
 
-bool iron_ping() { return true; }
+bool iron_ping() {
+    return true;
+}
