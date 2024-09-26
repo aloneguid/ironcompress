@@ -4,7 +4,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project ("nironcompress" VERSION 0.0)
 
-find_package(Snappy CONFIG REQUIRED)
+# find required packages
+if(NOT DEFINED ENV{NO_SNAPPY})
+    find_package(Snappy CONFIG REQUIRED)
+endif()
 find_package(zstd CONFIG REQUIRED)
 find_package(lz4 CONFIG REQUIRED)
 find_package(unofficial-brotli CONFIG REQUIRED)
@@ -22,12 +25,15 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-    Snappy::snappy
     zstd::libzstd_static
     lz4::lz4
     unofficial::brotli::brotlienc
     unofficial::brotli::brotlidec
     ZLIB::ZLIB)
+
+if(NOT DEFINED ENV{NO_SNAPPY})
+target_link_libraries(${PROJECT_NAME} PRIVATE Snappy::snappy)
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE "../../minilzo")
 

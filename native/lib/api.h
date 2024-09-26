@@ -50,6 +50,13 @@ extern "C"
       compression_level compression_level);
 
    /**
+    * @brief Rerturns true if the codec is supported by the library. Some architectures can have differences in supported codecs.
+    * @param codec 
+    * @return 
+    */
+   EXPORTED bool iron_is_supported(compression_codec codec);
+
+   /**
     * @brief Used to just ping the library to test it's available at all
     */
    EXPORTED bool iron_ping();

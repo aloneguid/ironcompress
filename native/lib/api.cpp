@@ -316,4 +316,8 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
     }
 }
 
+bool iron_is_supported(compression_codec codec) {
+    return true;
+}
+
 bool iron_ping() { return true; }

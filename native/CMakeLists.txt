@@ -5,15 +5,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project ("ironcompress" VERSION 0.0)
 
-# Conditionally set CMAKE_MSVC_RUNTIME_LIBRARY based on VCPKG_TRIPLET
-# Retrieve the VCPKG_TRIPLET environment variable
-string(TOLOWER "$ENV{VCPKG_TRIPLET}" VCPKG_TRIPLET_LOWER)
-if(VCPKG_TRIPLET_LOWER STREQUAL "x64-windows")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-
 # The cool "edit & continue" feature of MSVC is disabled by default in CMake.
 # https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170#edit-and-continue-for-cmake-projects
 # enable globally: https://stackoverflow.com/a/76254117/80858
