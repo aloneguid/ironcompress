@@ -40,7 +40,7 @@ jobs:
             vcpkg_triplet: arm64-linux
             vcpkg_config: RelWithDebInfo
             dotnet_rid: linux-arm64
-            native_tests: no
+            no_native_tests: true
           - os: windows-latest
             arch: x64
             vcpkg_triplet: x64-windows-static
@@ -62,31 +62,17 @@ jobs:
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
 
     env:
-      x-test1: 'test1'
-      x-test2: '${{ matrix.arch }}-test'
-      x-test3: '${{ matrix.error }}-test'
+      VCPKG_DEFAULT_VCPKG_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      VCPKG_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      VCPKG_CONFIG: ${{ matrix.vcpkg_config }}
+      DOTNET_RID: ${{ matrix.dotnet_rid }}
+      NO_NATIVE_TESTS: ${{ matrix.no_native_tests }}
 
     steps:
       
     - uses: actions/checkout@v4
       with:
         submodules: true
-
-    - name: env (windows)
-      if: runner.os == 'Windows'
-      run: |
-        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $env:GITHUB_ENV
-        echo "VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $env:GITHUB_ENV
-        echo "VCPKG_CONFIG=${{ matrix.vcpkg_config }}" >> $env:GITHUB_ENV
-        echo "DOTNET_RID=${{ matrix.dotnet_rid }}" >> $env:GITHUB_ENV
-
-    - name: env
-      if: runner.os != 'Windows'
-      run: |
-        echo "VCPKG_DEFAULT_VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $GITHUB_ENV
-        echo "VCPKG_TRIPLET=${{ matrix.vcpkg_triplet }}" >> $GITHUB_ENV
-        echo "VCPKG_CONFIG=${{ matrix.vcpkg_config }}" >> $GITHUB_ENV
-        echo "DOTNET_RID=${{ matrix.dotnet_rid }}" >> $GITHUB_ENV
 
     - name: Windows x86
       if: runner.os == 'Windows' && matrix.arch == 'x86'
@@ -99,7 +85,6 @@ jobs:
         sudo apt-get update
         sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
         echo "CMAKE_OPTIONS=-D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)" >> $GITHUB_ENV
-        echo "NO_TESTS=1" >> $GITHUB_ENV
 
     - name: OSX M1
       if: runner.os == 'macOS' && matrix.arch == 'arm64'

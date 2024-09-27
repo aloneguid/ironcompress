@@ -17,6 +17,8 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
     add_link_options("/OPT:REF")
 endif()
 
+
+message("no native tests:[" $ENV{NO_TESTS} "]")
 add_subdirectory(lib)
 # only build tests if NO_TESTS environment variable is not set
 if(NOT DEFINED ENV{NO_TESTS})
