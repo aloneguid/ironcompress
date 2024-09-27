@@ -1,4 +1,4 @@
-#include "../lib/api.h"
+#include "api.h"
 #include <gtest/gtest.h>
 #include <vector>
 

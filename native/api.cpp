@@ -1,6 +1,10 @@
 ﻿#include "api.h"
+#ifndef NO_NATIVE_SNAPPY
 #include "snappy.h"
+#endif
+#ifndef NO_NATIVE_ZSTD
 #include "zstd.h"
+#endif
 #include "minilzo.h"
 #include "lz4.h"
 #include <string>
@@ -26,7 +30,7 @@ bool lzo_initialised{ false };
   */
 #define LZ4_ACCELERATION_MAX 65537
 
-
+#ifndef NO_NATIVE_SNAPPY
 bool compress_snappy(
    bool compress,
    char* input_buffer,
@@ -59,7 +63,9 @@ bool compress_snappy(
 
     return true;
 }
+#endif
 
+#ifndef NO_NATIVE_ZSTD
 bool compress_zstd(
     bool compress,
     char* input_buffer,
@@ -91,6 +97,7 @@ bool compress_zstd(
 
     return true;
 }
+#endif
 
 // zlib tutorial: https://bobobobo.wordpress.com/2008/02/23/how-to-use-zlib/
 bool compress_gzip(
@@ -299,10 +306,14 @@ bool compress_lz4(
 bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
     char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
     switch(codec) {
+#ifndef NO_NATIVE_SNAPPY
         case 1:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
+#endif
+#ifndef NO_NATIVE_ZSTD
         case 2:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
+#endif
         case 3:
             return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 4:
@@ -316,4 +327,18 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
     }
 }
 
-bool iron_ping() { return true; }
+bool iron_is_supported(compression_codec codec) {
+#ifdef NO_NATIVE_SNAPPY
+    if(codec == compression_codec::snappy) return false;
+#endif
+
+#ifdef NO_NATIVE_ZSTD
+    if(codec == compression_codec::zstd) return false;
+#endif
+
+    return true;
+}
+
+bool iron_ping() {
+    return true;
+}
