@@ -7,10 +7,6 @@ env:
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
   VCPKG_HASH: 0f88ecb8528605f91980b90a2c5bad88e3cb565f
-  # Indicates the location of the vcpkg as a Git submodule of the project repository.
-  #VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  # Tells vcpkg where binary packages are stored.
-  # VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
 
 on:
   push:
@@ -69,7 +65,6 @@ jobs:
       VCPKG_TRIPLET: ${{ matrix.vcpkg_triplet }}
       VCPKG_CONFIG: ${{ matrix.vcpkg_config }}
       DOTNET_RID: ${{ matrix.dotnet_rid }}
-      NO_NATIVE_TESTS: ${{ matrix.no_native_tests }}
       NO_NATIVE_SNAPPY: ${{ matrix.no_native_snappy }}
       NO_NATIVE_ZSTD: ${{ matrix.no_native_zstd }}
 

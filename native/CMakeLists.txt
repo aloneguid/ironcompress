@@ -95,12 +95,3 @@ gtest_discover_tests(${TEST_PROJECT_NAME} DISCOVERY_MODE PRE_TEST)
 
 set_property(TARGET ${TEST_PROJECT_NAME} PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-#add_subdirectory(nironcompress)
-
-# only build tests if NO_NATIVE_TESTS environment variable is not set to "true"
-#if("$ENV{NO_NATIVE_TESTS}" STREQUAL "true")
-#    message(WARNING "native tests disabled")
-#else()
-#    add_subdirectory(test)
-#endif()
