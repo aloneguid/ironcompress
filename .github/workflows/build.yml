@@ -113,7 +113,7 @@ jobs:
       run: |
         ls -R
         pwd
-        tests.exe
+        .\tests.exe
       working-directory: native/build/Release
 
     - uses: actions/upload-artifact@v4
