@@ -319,9 +319,8 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
 }
 
 bool iron_is_supported(compression_codec codec) {
-    if(codec == compression_codec::snappy) {
-#ifdef NO_SNAPPY
-        return false;
+#ifdef NO_NATIVE_SNAPPY
+        if(codec == compression_codec::snappy) return false;
 #endif
     }
 

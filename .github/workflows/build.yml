@@ -53,6 +53,7 @@ jobs:
             vcpkg_config: Release
             dotnet_rid: win-x86
             no_native_snappy: true
+            no_native_tests: true # why is there no GTest for x86?
           - os: macos-latest
             arch: arm64  
             vcpkg_triplet: arm64-osx

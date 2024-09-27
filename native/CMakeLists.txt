@@ -19,13 +19,7 @@ endif()
 
 # only build tests if NO_NATIVE_TESTS environment variable is not set to "true"
 if("$ENV{NO_NATIVE_TESTS}" STREQUAL "true")
-    message("native tests disabled")
+    message(WARNING "native tests disabled")
 else()
     add_subdirectory(test)
-endif()
-
-# define "NO_NATIVE_SNAPPY" if environment variable is set to "true"
-if("$ENV{NO_NATIVE_SNAPPY}" STREQUAL "true")
-    message("native snappy disabled")
-    add_compile_definitions(NO_NATIVE_SNAPPY)
 endif()
