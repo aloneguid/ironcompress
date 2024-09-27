@@ -30,11 +30,9 @@ jobs:
       - name: debug
         run: ls -R
 
-      - name: 🔢 prep release notes
-        run: |
-          grep -m 2 -B 1000 '^## ' docs/release-notes.md | tail -n +3 | head -n -2 > final_notes.md
-          cat final_notes.md
+      - name: list release notes
+        run: cat docs/version-notes.md
 
-      # - name: 📦 Publish to NuGet
-      #   run: dotnet nuget push managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: 📦 Publish to NuGet
+        run: dotnet nuget push managed/IronCompress/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 

@@ -232,6 +232,11 @@ jobs:
     - name: version
       run: echo $VERSION >> docs/version.txt
 
+    - name: 🔢 prep release notes
+      run: |
+        grep -m 2 -B 1000 '^## ' docs/release-notes.md | tail -n +3 | head -n -2 > docs/version-notes.md
+        cat docs/version-notes.md
+
     - uses: actions/upload-artifact@v4
       name: Collect Artifacts
       with:
@@ -241,4 +246,5 @@ jobs:
         path: |
           managed/IronCompress/bin/Release/**/*nupkg
           docs/release-notes.md
+          docs/version-notes.md
           docs/version.txt

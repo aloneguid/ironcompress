@@ -19,17 +19,17 @@ jobs:
             | jq '.workflow_runs[] | select(.status=="completed") | .id' | head -1)
           echo "::set-output name=run-id::$run_id"
 
-      - name: 🔢 set version environment variable
-        run: |
-          echo "VERSION=$(cat version.txt | xargs)" >> "$GITHUB_ENV"
-
       - name: ⬇️ Download binary output from build.yml
         uses: actions/download-artifact@v4
         with:
           name: managed
-          path: managed
+          path: .
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.runid.outputs.run-id }}
+
+      - name: 🔢 set version environment variable
+        run: |
+          echo "VERSION=$(docs/cat version.txt | xargs)" >> "$GITHUB_ENV"
 
       - name: 📦 create release
         uses: softprops/action-gh-release@v1
