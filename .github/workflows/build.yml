@@ -106,9 +106,14 @@ jobs:
       working-directory: native/build
 
     - name: test
-      if: '!matrix.no_native_tests'
+      if: runner.os != 'Windows' && !matrix.no_native_tests 
       run: ctest
       working-directory: native/build
+
+    - name: test (windows)
+      if: runner.os == 'Windows' && !matrix.no_native_tests 
+      run: tests.exe
+      working-directory: native/build/Release
 
     - uses: actions/upload-artifact@v4
       name: Collect Artifacts
