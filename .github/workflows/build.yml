@@ -140,7 +140,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       name: Collect Artifacts
       with:
-        name: native
+        name: native-fat
         path: |
           native/ubin/**/*
 
@@ -173,7 +173,7 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: native
+        name: native-fat
         path: native/ubin/
 
     - name: debug1
@@ -208,7 +208,7 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: native
+        name: native-fat
         path: native/ubin/
 
     - name: debug
@@ -230,5 +230,5 @@ jobs:
       with:
         name: managed
         path: |
-          managed/IronCompress/bin/Release/*
+          managed/IronCompress/bin/Release/**/*nupkg
           docs/release-notes.md
