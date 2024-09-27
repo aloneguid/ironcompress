@@ -37,6 +37,7 @@ jobs:
             vcpkg_config: RelWithDebInfo
             dotnet_rid: linux-arm64
             no_native_tests: true
+            cmake_options: -D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)
           - os: windows-latest
             arch: x64
             vcpkg_triplet: x64-windows-static
@@ -56,6 +57,7 @@ jobs:
             vcpkg_triplet: arm64-osx
             vcpkg_config: RelWithDebInfo
             dotnet_rid: osx-arm64
+            cmake_options: -D CMAKE_OSX_ARCHITECTURES=arm64
 
       fail-fast: false
     name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
@@ -67,6 +69,7 @@ jobs:
       DOTNET_RID: ${{ matrix.dotnet_rid }}
       NO_NATIVE_SNAPPY: ${{ matrix.no_native_snappy }}
       NO_NATIVE_ZSTD: ${{ matrix.no_native_zstd }}
+      CMAKE_OPTIONS: ${{ matrix.cmake_options }}
 
     steps:
       
@@ -79,12 +82,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
-        echo "CMAKE_OPTIONS=-D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)" >> $GITHUB_ENV
-
-    - name: OSX M1
-      if: runner.os == 'macOS' && matrix.arch == 'arm64'
-      run: |
-        echo "CMAKE_OPTIONS=-D CMAKE_OSX_ARCHITECTURES=arm64" >> $GITHUB_ENV
 
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
@@ -112,7 +109,10 @@ jobs:
 
     - name: test (windows)
       if: runner.os == 'Windows' && !matrix.no_native_tests 
-      run: tests.exe
+      run: |
+        ls -R
+        pwd
+        tests.exe
       working-directory: native/build/Release
 
     - uses: actions/upload-artifact@v4
