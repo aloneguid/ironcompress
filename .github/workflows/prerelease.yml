@@ -27,5 +27,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.runid.outputs.run-id }}
 
-      - name: 📦 Publish to NuGet
-        run: dotnet nuget push managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: debug
+        run: ls -R
+
+      # - name: 📦 Publish to NuGet
+      #   run: dotnet nuget push managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      # - name: create gh release
+      #   uses: softprops/action-gh-release@v1
+      #   if: github.ref == 'refs/heads/master'
+      #   with:
+      #     tag_name: ${{ env.VERSION }}
+      #     name: ${{ env.VERSION }}
+      #     files: "pub/managed/*.nupkg"
+      #     generate_release_notes: true
+

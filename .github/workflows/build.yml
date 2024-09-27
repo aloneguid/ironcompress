@@ -231,28 +231,4 @@ jobs:
         name: managed
         path: |
           managed/IronCompress/bin/Release/*
-
-  publish:
-    needs: [test-managed, build-managed]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    environment: nuget
-    steps:
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: managed
-          path: pub/managed/
-
-      - name: push to nuget.org
-        run: dotnet nuget push pub/managed/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-      - name: create gh release
-        uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/master'
-        with:
-          tag_name: ${{ env.VERSION }}
-          name: ${{ env.VERSION }}
-          files: "pub/managed/*.nupkg"
-          generate_release_notes: true
-
+          docs/release-notes.md
