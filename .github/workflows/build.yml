@@ -141,6 +141,8 @@ jobs:
       name: Collect Artifacts
       with:
         name: native-fat
+        compression-level: 9
+        if-no-files-found: error
         path: |
           native/ubin/**/*
 
