@@ -17,15 +17,15 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
     add_link_options("/OPT:REF")
 endif()
 
-
-message("no native tests:[" $ENV{NO_NATIVE_TESTS} "]")
-add_subdirectory(lib)
-# only build tests if NO_TESTS environment variable is not set
-if(NOT DEFINED ENV{NO_NATIVE_TESTS})
+# only build tests if NO_NATIVE_TESTS environment variable is not set to "true"
+if("$ENV{NO_NATIVE_TESTS}" STREQUAL "true")
+    message("native tests disabled")
+else()
     add_subdirectory(test)
 endif()
 
-# print message if env var "NO_NATIVE_TESTS" is set to "true"
-if(DEFINED ENV{NO_NATIVE_TESTS})
-    message("native tests disabled")
+# define "NO_NATIVE_SNAPPY" if environment variable is set to "true"
+if("$ENV{NO_NATIVE_SNAPPY}" STREQUAL "true")
+    message("native snappy disabled")
+    add_compile_definitions(NO_NATIVE_SNAPPY)
 endif()

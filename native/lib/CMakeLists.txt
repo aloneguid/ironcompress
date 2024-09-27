@@ -31,9 +31,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     unofficial::brotli::brotlidec
     ZLIB::ZLIB)
 
-if(NOT DEFINED ENV{NO_SNAPPY})
+if(NOT DEFINED NO_NATIVE_SNAPPY)
 target_link_libraries(${PROJECT_NAME} PRIVATE Snappy::snappy)
 endif()
+
+# link library if NO_NATIVE_SNAPPY is defined
+
 
 target_include_directories(${PROJECT_NAME} PRIVATE "../../minilzo")
 

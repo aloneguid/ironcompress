@@ -52,6 +52,7 @@ jobs:
             vcpkg_triplet: x86-windows-static
             vcpkg_config: Release
             dotnet_rid: win-x86
+            no_native_snappy: true
           - os: macos-latest
             arch: arm64  
             vcpkg_triplet: arm64-osx
