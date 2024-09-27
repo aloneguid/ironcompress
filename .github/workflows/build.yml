@@ -229,6 +229,8 @@ jobs:
       name: Collect Artifacts
       with:
         name: managed
+        compression-level: 9
+        if-no-files-found: error
         path: |
           managed/IronCompress/bin/Release/**/*nupkg
           docs/release-notes.md
