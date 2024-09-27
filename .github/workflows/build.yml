@@ -63,7 +63,7 @@ jobs:
 
     env:
       x-test1: 'test1'
-      x-test2: '{{ matrix.arch }}-test'
+      x-test2: '${{ matrix.arch }}-test'
 
     steps:
       
