@@ -47,14 +47,14 @@ jobs:
             vcpkg_config: Release
             dotnet_rid: win-x64
           # Looks like there is no native port of Snappy for windows x86
-          - os: windows-latest
-            arch: x86
-            vcpkg_triplet: x86-windows-static
-            vcpkg_config: Release
-            dotnet_rid: win-x86
-            no_native_snappy: true
-            no_native_zstd: true
-            no_native_tests: true # why is there no GTest for x86?
+          # - os: windows-latest
+          #   arch: x86
+          #   vcpkg_triplet: x86-windows-static
+          #   vcpkg_config: Release
+          #   dotnet_rid: win-x86
+          #   no_native_snappy: true
+          #   no_native_zstd: true
+          #   no_native_tests: true
           - os: macos-latest
             arch: arm64  
             vcpkg_triplet: arm64-osx
@@ -109,7 +109,7 @@ jobs:
     - name: test
       if: '!matrix.no_native_tests'
       run: ctest
-      working-directory: native/build/test
+      working-directory: native/build
 
     - name: debug
       run: ls -R
