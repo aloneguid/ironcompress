@@ -1,4 +1,4 @@
-﻿name: 'PRE-release'
+﻿name: '🧪 PRE-release'
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       
-      - name: Get latest run ID
+      - name: 🆔 Get latest run ID
         id: runid
         run: |
           run_id=$(curl --request GET \
