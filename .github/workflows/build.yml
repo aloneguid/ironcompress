@@ -106,14 +106,14 @@ jobs:
       run: cmake --build build --config ${{ env.VCPKG_CONFIG }}
       working-directory: native
 
+    - name: debug
+      run: ls -R
+      working-directory: native/build
+
     - name: test
       if: '!matrix.no_native_tests'
       run: ctest
       working-directory: native/build
-
-    - name: debug
-      run: ls -R
-      working-directory: native
 
     - uses: actions/upload-artifact@v4
       name: Collect Artifacts
