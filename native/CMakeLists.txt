@@ -18,9 +18,14 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 
-message("no native tests:[" $ENV{NO_TESTS} "]")
+message("no native tests:[" $ENV{NO_NATIVE_TESTS} "]")
 add_subdirectory(lib)
 # only build tests if NO_TESTS environment variable is not set
-if(NOT DEFINED ENV{NO_TESTS})
+if(NOT DEFINED ENV{NO_NATIVE_TESTS})
     add_subdirectory(test)
+endif()
+
+# print message if env var "NO_NATIVE_TESTS" is set to "true"
+if(DEFINED ENV{NO_NATIVE_TESTS})
+    message("native tests disabled")
 endif()
