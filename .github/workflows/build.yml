@@ -43,16 +43,13 @@ jobs:
             vcpkg_triplet: x64-windows-static
             vcpkg_config: Release
             dotnet_rid: win-x64
-          # Looks like there is no native port of Snappy for windows x86
-          - os: windows-latest
-            arch: x86
-            vcpkg_triplet: x86-windows-static
-            vcpkg_config: Release
-            dotnet_rid: win-x86
-            cmake_options: -D CMAKE_GENERATOR_PLATFORM=x86
-            # no_native_snappy: true
-            # no_native_zstd: true
-            # no_native_tests: true
+          # Still can't make this build
+          # - os: windows-latest
+          #   arch: x86
+          #   vcpkg_triplet: x86-windows-static
+          #   vcpkg_config: Release
+          #   dotnet_rid: win-x86
+          #   cmake_options: -D CMAKE_GENERATOR_PLATFORM=x86
           - os: macos-latest
             arch: arm64  
             vcpkg_triplet: arm64-osx
@@ -108,7 +105,7 @@ jobs:
       run: ctest
       working-directory: native/build
 
-    - name: test (windows)
+    - name: test (windows .exe)
       if: runner.os == 'Windows' && !matrix.no_native_tests 
       run: |
         ls -R
