@@ -17,6 +17,8 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
     add_link_options("/OPT:REF")
 endif()
 
+add_subdirectory(nironcompress)
+
 # only build tests if NO_NATIVE_TESTS environment variable is not set to "true"
 if("$ENV{NO_NATIVE_TESTS}" STREQUAL "true")
     message(WARNING "native tests disabled")

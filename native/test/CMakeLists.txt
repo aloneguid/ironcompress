@@ -2,7 +2,7 @@
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project ("test" VERSION 0.0)
+project ("test")
 
 find_package(GTest CONFIG REQUIRED)
 
@@ -14,7 +14,8 @@ add_executable(${PROJECT_NAME} "test.cpp")
 target_link_libraries(${PROJECT_NAME} GTest::gtest_main nironcompress)
 
 include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(${PROJECT_NAME}
+    DISCOVERY_MODE PRE_TEST)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
