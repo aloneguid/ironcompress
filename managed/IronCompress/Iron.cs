@@ -44,8 +44,7 @@ namespace IronCompress {
         }
 
         static bool SupportsNative(Codec c) {
-            //return IsNativeLibraryAvailable && c != Codec.Gzip;
-            return true;
+            return Native.iron_is_supported((int)c);
         }
 
         /// <summary>
