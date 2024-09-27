@@ -53,6 +53,7 @@ jobs:
             vcpkg_config: Release
             dotnet_rid: win-x86
             no_native_snappy: true
+            no_native_zstd: true
             no_native_tests: true # why is there no GTest for x86?
           - os: macos-latest
             arch: arm64  
@@ -69,17 +70,14 @@ jobs:
       VCPKG_CONFIG: ${{ matrix.vcpkg_config }}
       DOTNET_RID: ${{ matrix.dotnet_rid }}
       NO_NATIVE_TESTS: ${{ matrix.no_native_tests }}
+      NO_NATIVE_SNAPPY: ${{ matrix.no_native_snappy }}
+      NO_NATIVE_ZSTD: ${{ matrix.no_native_zstd }}
 
     steps:
       
     - uses: actions/checkout@v4
       with:
         submodules: true
-
-    - name: Windows x86
-      if: runner.os == 'Windows' && matrix.arch == 'x86'
-      run: |
-        echo "NO_SNAPPY=1" >> $env:GITHUB_ENV
 
     - name: Linux ARM
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
