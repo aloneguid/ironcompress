@@ -22,41 +22,10 @@ jobs:
       - name: ⬇️ Download binary output from build.yml
         uses: actions/download-artifact@v4
         with:
-          name: bin
-          path: bin
+          name: managed
+          path: managed
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.runid.outputs.run-id }}
 
-      - name: ⬇️ Download floor from build.yml
-        uses: actions/download-artifact@v4
-        with:
-          pattern: floor-*
-          path: floor
-          merge-multiple: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ steps.runid.outputs.run-id }}
-
-      - name: 🔍 view artifacts to be used
+      - name: debug
         run: ls -R
-        working-directory: .
-
-      - name: 🔢 prep environment
-        run: |
-          echo "VERSION=$(cat bin/version.txt)" >> "$GITHUB_ENV"
-          grep -m 2 -B 1000 '^## ' bin/release-history.md | tail -n +3 | head -n -2 > release-notes.md
-          cat release-notes.md
-
-      - name: 📦 Publish to NuGet
-        run: dotnet nuget push bin/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-      # https://github.com/softprops/action-gh-release
-      - name: 📢 Create release
-        uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/master'
-        with:
-          tag_name: ${{ env.VERSION }}
-          name: ${{ env.VERSION }}
-          files: |
-            bin/*.nupkg
-            floor/*.zip
-          body_path: release-notes.md
