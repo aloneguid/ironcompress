@@ -47,12 +47,14 @@ namespace IronCompress {
             int compressionLevel);
 
         [DllImport(LibName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool iron_ping();
 
         [DllImport(LibName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         internal static extern bool iron_is_supported(int codec);
 
         [DllImport(LibName)]
-        internal static extern string iron_version();
+        internal static extern IntPtr iron_version();
     }
 }

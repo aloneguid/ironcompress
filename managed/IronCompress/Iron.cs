@@ -48,7 +48,9 @@ namespace IronCompress {
         }
 
         public static string GetNativeVersion() {
-            return Native.iron_version();
+            IntPtr ptr = Native.iron_version();
+            string version = Marshal.PtrToStringAnsi(ptr);
+            return version;
         }
 
         /// <summary>
