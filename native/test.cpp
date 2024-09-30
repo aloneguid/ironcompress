@@ -4,59 +4,89 @@
 
 using namespace std;
 
-bool run(compression_codec method, char* buffer, size_t buffer_length) {
-    int32_t len{0};
-    bool ok = iron_compress(true, method, buffer, buffer_length, nullptr, &len, compression_level::best);
+std::string str1 = R"(
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
+
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
+
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.
+    )";
+
+void test_roundtrip(compression_codec codec) {
+    vector<char> uncompressed(str1.begin(), str1.end());
+    int32_t compressed_length;
+
+    // find out how much space we need for compression
+    bool ok = iron_compress(true, codec,
+        &uncompressed[0], uncompressed.size(), nullptr, &compressed_length, compression_level::best);
+    EXPECT_TRUE(ok);
+
+    // create buffer for compression
     vector<char> compressed;
-    compressed.resize(len);
+    compressed.resize(compressed_length);
+    
+    // compress
+    ok = iron_compress(true, codec,
+        &uncompressed[0], uncompressed.size(),
+        &compressed[0], &compressed_length, compression_level::best);
+    EXPECT_TRUE(ok);
 
-    ok = iron_compress(true, method, buffer, buffer_length,
-        &compressed[0], &len, compression_level::best);
+    // check that's it's compressed indeed
+    EXPECT_LT(compressed_length, uncompressed.size());
 
-    vector<byte> decompressed;
-    int32_t bl1 = buffer_length;
-    decompressed.resize(buffer_length);
-    ok = iron_compress(false, method, &compressed[0], len,
-       (char*)&decompressed[0], &bl1, compression_level::best);
+    // decompress
+    vector<char> decompressed1;
+    decompressed1.resize(uncompressed.size());
+    int32_t decompressed_length = uncompressed.size();
+    ok = iron_compress(false, codec,
+        &compressed[0], compressed_length,
+        &decompressed1[0], &decompressed_length, compression_level::best);
+    EXPECT_TRUE(ok);
 
-    // todo: compare buffer sizes
-
-    return ok;
+    // check that decompressed is the same as original
+    EXPECT_EQ(decompressed_length, uncompressed.size());
+    EXPECT_EQ(decompressed1, uncompressed);
+    
 }
 
-TEST(Roundtrip, Snappy_1) {
-    char bytes[] = {'a', 'b', 'c'};
-    EXPECT_TRUE(run(compression_codec::snappy, bytes, 3));
+
+TEST(Roundtrip, Snappy) {
+    test_roundtrip(compression_codec::snappy);
 }
 
-TEST(Roundtrip, Zstd_2) {
-    char bytes[] = {'a', 'b', 'c'};
-    EXPECT_TRUE(run(compression_codec::zstd, bytes, 3));
+TEST(Roundtrip, Zstd) {
+    test_roundtrip(compression_codec::zstd);
 }
 
-TEST(Roundtrip, Gzip_3) {
+// no gzip
+
+TEST(Roundtrip, Brotli) {
+    test_roundtrip(compression_codec::brotli);
+}
+
+TEST(Roundtrip, Lzo) {
+    test_roundtrip(compression_codec::lzo);
+}
+
+TEST(Roundtrip, Lz4) {
+    test_roundtrip(compression_codec::lz4);
+}
+
+TEST(Infra, Ping) {
+    EXPECT_TRUE(iron_ping());
+}
+
+TEST(Infra, IsSupported) {
+    EXPECT_TRUE(iron_is_supported(compression_codec::snappy));
+    EXPECT_TRUE(iron_is_supported(compression_codec::zstd));
     EXPECT_FALSE(iron_is_supported(compression_codec::gzip));
-    EXPECT_FALSE(iron_compress(true, compression_codec::gzip,
-        nullptr, 0,
-        nullptr, nullptr,
-        compression_level::best));
-
-    //char bytes[] = {'a', 'b', 'c'};
-    //EXPECT_TRUE(run(3, bytes, 3));
-}
-
-TEST(Roundtrip, Brotli_4) {
-    char bytes[] = {'a', 'b', 'c'};
-    EXPECT_TRUE(run(compression_codec::brotli, bytes, 3));
-}
-
-TEST(Roundtrip, Lzo_5) {
-    char bytes[] = {'a', 'b', 'c'};
-    EXPECT_TRUE(run(compression_codec::lzo, bytes, 3));
-}
-
-TEST(Roundtrip, LZ4_6) {
-    char bytes[] = {'a', 'b', 'c'};
-    EXPECT_TRUE(run(compression_codec::lz4, bytes, 3));
+    EXPECT_TRUE(iron_is_supported(compression_codec::brotli));
+    EXPECT_TRUE(iron_is_supported(compression_codec::lzo));
+    EXPECT_TRUE(iron_is_supported(compression_codec::lz4));
 }
