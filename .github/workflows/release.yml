@@ -31,6 +31,10 @@ jobs:
         run: |
           echo "VERSION=$(cat docs/version.txt | xargs)" >> "$GITHUB_ENV"
 
+
+      - name: 📦 Publish to NuGet
+        run: dotnet nuget push managed/IronCompress/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
       - name: 📦 create release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
@@ -39,4 +43,6 @@ jobs:
           name: ${{ env.VERSION }}
           files: |
             **/*.nupkg
-          body_path: docs/final_notes.md
+          body_path: docs/version-notes.md
+
+
