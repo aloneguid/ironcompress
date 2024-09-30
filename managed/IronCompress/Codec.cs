@@ -1,12 +1,12 @@
 ﻿namespace IronCompress {
     public enum Codec {
         /// <summary>
-        /// Google Snappy. Has managed and native implementations.
+        /// Google Snappy.
         /// </summary>
         Snappy = 1,
 
         /// <summary>
-        /// Facebook Zstandard. Native only.
+        /// Facebook Zstandard.
         /// </summary>
         Zstd = 2,
 

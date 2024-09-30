@@ -35,7 +35,7 @@ namespace IronCompress {
             }
         }
 
-        static bool SupportsManaged(Codec c) {
+        public static bool SupportsManaged(Codec c) {
 #if NETSTANDARD2_0
             return c == Codec.Snappy || c == Codec.Gzip;
 #else
@@ -43,7 +43,7 @@ namespace IronCompress {
 #endif
         }
 
-        static bool SupportsNative(Codec c) {
+        public static bool SupportsNative(Codec c) {
             return Native.iron_is_supported((int)c);
         }
 

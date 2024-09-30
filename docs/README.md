@@ -24,8 +24,8 @@ And following architectures:
 |            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
 |            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
 | **Gzip**   | ✅<br /><sup>*part of .NET*</sup>                             |      | ⛔       | ⛔     | ⛔       | x32              |
-|            |                                                              |      | ✅       | ✅     | ✅       | x64              |
-|            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |
+|            |                                                              |      | ⛔       | ⛔     | ⛔       | x64              |
+|            |                                                              |      | ⛔       | ⛔     | ⛔       | ARM64            |
 | **Brotli** | ✅<br /><sup>*except on .NET Standard 2.0*</sup>              |      | ⛔       | ⛔     | ⛔       | x32              |
 |            |                                                              |      | ✅       | ✅     | ⛔       | x64              |
 |            |                                                              |      | ⛔       | ✅     | ✅       | ARM64            |

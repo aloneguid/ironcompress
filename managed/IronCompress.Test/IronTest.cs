@@ -65,4 +65,9 @@ public class IronTest {
     public void CheckNativeLibAvailable() {
         Assert.True(Iron.IsNativeLibraryAvailable);
     }
+
+    [Fact]
+    public void CheckNoNativeGzip() {
+        Assert.False(Iron.SupportsNative(Codec.Gzip));
+    }
 }
