@@ -1,3 +1,8 @@
+## 1.6.2
+
+- Improvement: native library can return it's version.
+- Bug fixed: marshalling `bool` return type from C++ is different from C, which resulted in wrong error code passed back to C#.
+
 ## 1.6.1
 
 ### Improvements
