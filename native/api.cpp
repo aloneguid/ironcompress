@@ -100,7 +100,8 @@ bool compress_zstd(
 #endif
 
 // zlib tutorial: https://bobobobo.wordpress.com/2008/02/23/how-to-use-zlib/
-bool compress_gzip(
+// gzip is NOT zlib
+/*bool compress_gzip(
     bool compress,
     char* input_buffer,
     int input_buffer_size,
@@ -153,7 +154,7 @@ bool compress_gzip(
     }
 
     return false;
-}
+}*/
 
 bool compress_brotli(
     bool compress,
@@ -314,8 +315,8 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
         case 2:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
 #endif
-        case 3:
-            return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
+        //case 3:
+        //    return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 4:
             return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         case 5:
@@ -328,6 +329,9 @@ bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t inp
 }
 
 bool iron_is_supported(compression_codec codec) {
+
+    if(codec == compression_codec::gzip) return false;
+
 #ifdef NO_NATIVE_SNAPPY
     if(codec == compression_codec::snappy) return false;
 #endif
