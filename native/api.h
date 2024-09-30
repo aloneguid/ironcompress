@@ -42,7 +42,7 @@ extern "C"
    */
    EXPORTED bool iron_compress(
       bool compress,
-      int32_t codec,
+      compression_codec codec,
       char* input_buffer,
       int32_t input_buffer_size,
       char* output_buffer,

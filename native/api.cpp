@@ -304,24 +304,27 @@ bool compress_lz4(
     return false;
 }
 
-bool iron_compress(bool compress, int32_t codec, char* input_buffer, int32_t input_buffer_size,
+bool iron_compress(bool compress, compression_codec codec, char* input_buffer, int32_t input_buffer_size,
     char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
+
+    if(!iron_is_supported(codec)) return false;
+
     switch(codec) {
 #ifndef NO_NATIVE_SNAPPY
-        case 1:
+        case compression_codec::snappy:
             return compress_snappy(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
 #endif
 #ifndef NO_NATIVE_ZSTD
-        case 2:
+        case compression_codec::zstd:
             return compress_zstd(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
 #endif
         //case 3:
         //    return compress_gzip(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
-        case 4:
+        case compression_codec::brotli:
             return compress_brotli(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
-        case 5:
+        case compression_codec::lzo:
             return compress_lzo(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size);
-        case 6:
+        case compression_codec::lz4:
             return compress_lz4(compress, input_buffer, input_buffer_size, output_buffer, output_buffer_size, compression_level);
         default:
             return false;
