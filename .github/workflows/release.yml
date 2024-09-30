@@ -29,7 +29,7 @@ jobs:
 
       - name: 🔢 set version environment variable
         run: |
-          echo "VERSION=$(docs/cat version.txt | xargs)" >> "$GITHUB_ENV"
+          echo "VERSION=$(cat docs/version.txt | xargs)" >> "$GITHUB_ENV"
 
       - name: 📦 create release
         uses: softprops/action-gh-release@v1
@@ -38,5 +38,5 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: ${{ env.VERSION }}
           files: |
-            bt-*.*
-          body_path: final_notes.md
+            **/*.nupkg
+          body_path: docs/final_notes.md
