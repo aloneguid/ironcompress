@@ -349,3 +349,7 @@ bool iron_is_supported(compression_codec codec) {
 bool iron_ping() {
     return true;
 }
+
+const char* iron_version() {
+    return IRON_VERSION;
+}

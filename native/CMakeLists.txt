@@ -31,6 +31,8 @@ endif()
 # ------- Dynamic Library -----------
 
 add_library (${PROJECT_NAME} SHARED "api.cpp" "../minilzo/minilzo.c")
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    IRON_VERSION="$ENV{VERSION}")
 set_property(TARGET ${PROJECT_NAME} PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 

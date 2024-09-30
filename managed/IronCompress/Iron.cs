@@ -47,6 +47,10 @@ namespace IronCompress {
             return Native.iron_is_supported((int)c);
         }
 
+        public static string GetNativeVersion() {
+            return Native.iron_version();
+        }
+
         /// <summary>
         /// Set to force specific platform. Used mostly in benchmarking tests, prefer not to set.
         /// </summary>

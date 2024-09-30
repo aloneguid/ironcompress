@@ -90,3 +90,9 @@ TEST(Infra, IsSupported) {
     EXPECT_TRUE(iron_is_supported(compression_codec::lzo));
     EXPECT_TRUE(iron_is_supported(compression_codec::lz4));
 }
+
+TEST(Infra, Version) {
+    const char* version = iron_version();
+    EXPECT_TRUE(version != nullptr);
+    EXPECT_TRUE(strlen(version) > 0);
+}

@@ -70,4 +70,9 @@ public class IronTest {
     public void CheckNoNativeGzip() {
         Assert.False(Iron.SupportsNative(Codec.Gzip));
     }
+
+    [Fact]
+    public void CheckVersion() {
+        Assert.NotEmpty(Iron.GetNativeVersion());
+    }
 }

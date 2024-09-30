@@ -51,5 +51,8 @@ namespace IronCompress {
 
         [DllImport(LibName)]
         internal static extern bool iron_is_supported(int codec);
+
+        [DllImport(LibName)]
+        internal static extern string iron_version();
     }
 }
