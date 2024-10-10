@@ -31,6 +31,12 @@ jobs:
             vcpkg_triplet: x64-linux
             vcpkg_config: RelWithDebInfo
             dotnet_rid: linux-x64
+          - os: ubuntu-22.04
+            arch: x64
+            vcpkg_triplet: x64-linux
+            vcpkg_config: RelWithDebInfo
+            dotnet_rid: linux-musl-x64
+            cmake_options: -D CMAKE_C_FLAGS="-static -Os"
           - os: ubuntu-20.04
             arch: arm64
             vcpkg_triplet: arm64-linux
