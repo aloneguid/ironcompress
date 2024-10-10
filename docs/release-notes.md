@@ -1,3 +1,7 @@
+## 1.6.3
+
+- Native build for Linux [musl](https://wiki.musl-libc.org/projects-using-musl.html) runtime.
+
 ## 1.6.2
 
 - Improvement: native library can return it's version.
