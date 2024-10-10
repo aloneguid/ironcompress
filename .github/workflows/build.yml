@@ -1,9 +1,9 @@
 ﻿name: '🏦 Build'
 
 env:
-  VERSION: 1.6.2
-  # PACKAGE_SUFFIX: '-pre.1'
-  PACKAGE_SUFFIX: ''
+  VERSION: 1.6.3
+  PACKAGE_SUFFIX: '-pre.1'
+  # PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
   VCPKG_HASH: 0f88ecb8528605f91980b90a2c5bad88e3cb565f
@@ -27,11 +27,20 @@ jobs:
       matrix:
         include:
           - os: ubuntu-20.04
+            name: Linux x64
             arch: x64
             vcpkg_triplet: x64-linux
             vcpkg_config: RelWithDebInfo
             dotnet_rid: linux-x64
+          - os: ubuntu-22.04
+            name: Linux x64 musl
+            arch: x64
+            vcpkg_triplet: x64-linux
+            vcpkg_config: RelWithDebInfo
+            dotnet_rid: linux-musl-x64
+            cmake_options: -D CMAKE_C_FLAGS="-static -Os"
           - os: ubuntu-20.04
+            name: Linux ARM
             arch: arm64
             vcpkg_triplet: arm64-linux
             vcpkg_config: RelWithDebInfo
@@ -39,6 +48,7 @@ jobs:
             no_native_tests: true
             cmake_options: -D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_C_COMPILER=$(which aarch64-linux-gnu-gcc) -D CMAKE_CXX_COMPILER=$(which aarch64-linux-gnu-g++)
           - os: windows-latest
+            name: Windows x64
             arch: x64
             vcpkg_triplet: x64-windows-static
             vcpkg_config: Release
@@ -51,6 +61,7 @@ jobs:
           #   dotnet_rid: win-x86
           #   cmake_options: -D CMAKE_GENERATOR_PLATFORM=x86
           - os: macos-latest
+            name: MacOS ARM
             arch: arm64  
             vcpkg_triplet: arm64-osx
             vcpkg_config: RelWithDebInfo
@@ -58,7 +69,7 @@ jobs:
             cmake_options: -D CMAKE_OSX_ARCHITECTURES=arm64
 
       fail-fast: false
-    name: 'build: ${{ matrix.os }} (${{ matrix.arch }})'
+    name: 'build: ${{ matrix.name }}'
 
     env:
       VCPKG_DEFAULT_VCPKG_TRIPLET: ${{ matrix.vcpkg_triplet }}
