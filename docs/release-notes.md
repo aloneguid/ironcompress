@@ -1,3 +1,8 @@
+## 1.6.3
+
+- Native build for Linux [musl](https://wiki.musl-libc.org/projects-using-musl.html) runtime.
+- Fixed regression - when native library cannot be loaded, the entire compression fails.
+
 ## 1.6.2
 
 - Improvement: native library can return it's version.

@@ -44,12 +44,15 @@ namespace IronCompress {
         }
 
         public static bool SupportsNative(Codec c) {
+            if(!IsNativeLibraryAvailable) {
+                return false;
+            }
             return Native.iron_is_supported((int)c);
         }
 
-        public static string GetNativeVersion() {
+        public static string? GetNativeVersion() {
             IntPtr ptr = Native.iron_version();
-            string version = Marshal.PtrToStringAnsi(ptr);
+            string? version = Marshal.PtrToStringAnsi(ptr);
             return version;
         }
 
