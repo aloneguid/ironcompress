@@ -1,3 +1,8 @@
+## 1.6.4
+
+- Add ` /guard:cf` by @johnthcall in #26.
+- Increase buffer size variable resolution to `int64_t` (#28).
+
 ## 1.6.3
 
 - Native build for Linux [musl](https://wiki.musl-libc.org/projects-using-musl.html) runtime.
