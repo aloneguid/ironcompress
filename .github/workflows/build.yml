@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             name: Linux x64
             arch: x64
             vcpkg_triplet: x64-linux
@@ -39,7 +39,7 @@ jobs:
             vcpkg_config: RelWithDebInfo
             dotnet_rid: linux-musl-x64
             cmake_options: -D CMAKE_C_FLAGS="-static -Os"
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             name: Linux ARM
             arch: arm64
             vcpkg_triplet: arm64-linux
