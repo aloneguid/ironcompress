@@ -80,7 +80,7 @@ You will need more or less recent C++ compiler, `CMake` and `.NET SDK 8` to buil
 
 ## Building
 
-See [workflow file](.github/workflows/ci.yml) for building instructions.
+See [workflow file](../.github/workflows/ci.yml) for building instructions.
 
 Hint: To develop managed only code locally you can download the latest artifact from Actions output and put it into `native/ubin` so you have binaries for all platforms.
 
