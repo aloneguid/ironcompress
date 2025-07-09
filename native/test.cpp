@@ -20,7 +20,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
 
 void test_roundtrip(compression_codec codec) {
     vector<char> uncompressed(str1.begin(), str1.end());
-    int32_t compressed_length;
+    int64_t compressed_length;
 
     // find out how much space we need for compression
     bool ok = iron_compress(true, codec,
@@ -43,7 +43,7 @@ void test_roundtrip(compression_codec codec) {
     // decompress
     vector<char> decompressed1;
     decompressed1.resize(uncompressed.size());
-    int32_t decompressed_length = uncompressed.size();
+    int64_t decompressed_length = uncompressed.size();
     ok = iron_compress(false, codec,
         &compressed[0], compressed_length,
         &decompressed1[0], &decompressed_length, compression_level::best);
