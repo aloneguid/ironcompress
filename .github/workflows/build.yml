@@ -86,11 +86,15 @@ jobs:
       with:
         submodules: true
 
-    - name: Linux ARM
+    - name: Linux ARM (cross-compile deps)
       if: runner.os == 'Linux' && matrix.arch == 'arm64'
       run: |
         sudo apt-get update
-        sudo apt-get --yes install g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu
+        sudo apt-get --yes install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu pkg-config-aarch64-linux-gnu qemu-user-static
+        # Ensure pkg-config wrapper is available
+        if ! command -v aarch64-linux-gnu-pkg-config; then
+          sudo ln -s /usr/bin/pkg-config /usr/bin/aarch64-linux-gnu-pkg-config
+        fi
 
     - uses: friendlyanon/setup-vcpkg@v1
       # seems like the absense of commit hash expects vcpkg submodule, i don't want that
