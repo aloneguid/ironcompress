@@ -34,16 +34,16 @@ bool lzo_initialised{ false };
 bool compress_snappy(
    bool compress,
    char* input_buffer,
-   int input_buffer_size,
+   int64_t input_buffer_size,
    char* output_buffer,
-   int* output_buffer_size) {
+   int64_t* output_buffer_size) {
     if(output_buffer == nullptr) {
         if(compress)
-            *output_buffer_size = snappy::MaxCompressedLength(input_buffer_size);
+            *output_buffer_size = static_cast<int64_t>(snappy::MaxCompressedLength(input_buffer_size));
         else {
             size_t length;
             if(snappy::GetUncompressedLength(input_buffer, input_buffer_size, &length)) {
-                *output_buffer_size = length;
+                *output_buffer_size = static_cast<int64_t>(length);
             } else {
                 *output_buffer_size = 0;
                 return false;
@@ -69,15 +69,15 @@ bool compress_snappy(
 bool compress_zstd(
     bool compress,
     char* input_buffer,
-    int input_buffer_size,
+    int64_t input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size,
+    int64_t* output_buffer_size,
 	compression_level compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
-            *output_buffer_size = ZSTD_compressBound(input_buffer_size);
+            *output_buffer_size = static_cast<int64_t>(ZSTD_compressBound(input_buffer_size));
         } else {
-            *output_buffer_size = ZSTD_getFrameContentSize(input_buffer, input_buffer_size);
+            *output_buffer_size = static_cast<int64_t>(ZSTD_getFrameContentSize(input_buffer, input_buffer_size));
         }
         return true;
     }
@@ -159,9 +159,9 @@ bool compress_zstd(
 bool compress_brotli(
     bool compress,
     char* input_buffer,
-    int input_buffer_size,
+    int64_t input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size,
+    int64_t* output_buffer_size,
 	compression_level compression_level) {
 
     if(output_buffer == nullptr) {
@@ -201,9 +201,9 @@ bool compress_brotli(
 bool compress_lzo(
    bool compress,
    char* input_buffer,
-   int input_buffer_size,
+   int64_t input_buffer_size,
    char* output_buffer,
-   int* output_buffer_size)
+   int64_t* output_buffer_size)
 {
    //minilzo sample: https://github.com/nemequ/lzo/blob/master/minilzo/testmini.c
 
@@ -272,9 +272,9 @@ bool compress_lzo(
 bool compress_lz4(
     bool compress,
     char* input_buffer,
-    int input_buffer_size,
+    int64_t input_buffer_size,
     char* output_buffer,
-    int* output_buffer_size,
+    int64_t* output_buffer_size,
     compression_level compression_level) {
     if(output_buffer == nullptr) {
         if(compress) {
@@ -304,8 +304,8 @@ bool compress_lz4(
     return false;
 }
 
-bool iron_compress(bool compress, compression_codec codec, char* input_buffer, int32_t input_buffer_size,
-    char* output_buffer, int32_t* output_buffer_size, compression_level compression_level) {
+bool iron_compress(bool compress, compression_codec codec, char* input_buffer, int64_t input_buffer_size,
+    char* output_buffer, int64_t* output_buffer_size, compression_level compression_level) {
 
     if(!iron_is_supported(codec)) return false;
 

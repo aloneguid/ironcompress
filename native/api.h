@@ -44,9 +44,9 @@ extern "C"
        bool compress,
        compression_codec codec,
        char* input_buffer,
-       int32_t input_buffer_size,
+       int64_t input_buffer_size,
        char* output_buffer,
-       int32_t* output_buffer_size,
+       int64_t* output_buffer_size,
        compression_level compression_level);
 
     /**
