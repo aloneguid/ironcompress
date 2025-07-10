@@ -72,7 +72,7 @@ namespace IronCompress {
         public IronCompressResult Compress(
             Codec codec,
             ReadOnlySpan<byte> input,
-            int? outputLength = null,
+            long? outputLength = null,
             CompressionLevel compressionLevel = CompressionLevel.Optimal) {
 
             if(ForcePlatform != null) { 
@@ -96,7 +96,7 @@ namespace IronCompress {
         public IronCompressResult Decompress(
            Codec codec,
            ReadOnlySpan<byte> input,
-           int? outputLength = null) {
+           long? outputLength = null) {
 
             if(ForcePlatform != null) {
                 if(ForcePlatform == Platform.Native) {
@@ -132,9 +132,9 @@ namespace IronCompress {
             Codec codec,
             ReadOnlySpan<byte> input,
             CompressionLevel compressionLevel,
-            int? outputLength = null) {
+            long? outputLength = null) {
 
-            int len = 0;
+            long len = 0;
             int level = ToNativeCompressionLevel(compressionLevel);
             unsafe {
                 fixed(byte* inputPtr = input) {
@@ -150,9 +150,9 @@ namespace IronCompress {
                         len = outputLength.Value;
                     }
 
-                    byte[] output = _allocPool == null
+                    byte[] output = (_allocPool == null || len > int.MaxValue)
                        ? new byte[len]
-                       : _allocPool.Rent(len);
+                       : _allocPool.Rent((int)len);
 
                     fixed(byte* outputPtr = output) {
                         try {
@@ -181,7 +181,7 @@ namespace IronCompress {
             Codec codec,
             ReadOnlySpan<byte> input,
             CompressionLevel compressionLevel,
-            int? outputLength = null) {
+            long? outputLength = null) {
 
             byte[] result;
 

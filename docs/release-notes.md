@@ -1,7 +1,8 @@
-## 1.6.4
+## 1.7.0
 
 - Add ` /guard:cf` by @johnthcall in #26.
-- Increase buffer size variable resolution to `int64_t` (#28).
+- Where possible, increase "buffer size" variable resolution to `int64_t` (#28).
+- Native and managed dependencies upgraded to the latest versions.
 
 ## 1.6.3
 
