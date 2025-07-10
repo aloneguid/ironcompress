@@ -6,7 +6,7 @@ namespace IronCompress {
     /// </summary>
     public class IronCompressResult : IDisposable {
         private readonly byte[] _data;
-        private readonly int _dataSize;
+        private readonly long _dataSize;
         private ArrayPool<byte>? _arrayPool;
 
         /// <summary>
@@ -15,7 +15,7 @@ namespace IronCompress {
         /// <param name="data">Data referenced by result.</param>
         /// <param name="dataSize">If data size is difference from input array size, pass the size explicitly.</param>
         /// <param name="arrayPool">When passed, will return to pool on dispose</param>
-        public IronCompressResult(byte[] data, Codec codec, bool nativeUsed, int dataSize = -1, ArrayPool<byte>? arrayPool = null) {
+        public IronCompressResult(byte[] data, Codec codec, bool nativeUsed, long dataSize = -1, ArrayPool<byte>? arrayPool = null) {
             _data = data;
             Codec = codec;
             NativeUsed = nativeUsed;
@@ -23,7 +23,7 @@ namespace IronCompress {
             _arrayPool = arrayPool;
         }
 
-        public int Length => _dataSize == -1 ? _data.Length : _dataSize;
+        public long Length => _dataSize == -1 ? _data.Length : _dataSize;
 
         /// <summary>
         /// Compression codec used
@@ -35,8 +35,12 @@ namespace IronCompress {
         /// </summary>
         public bool NativeUsed { get; }
 
+        /// <summary>
+        /// TODO: might overflow
+        /// </summary>
+        /// <returns></returns>
         public Span<byte> AsSpan() =>
-           _data.AsSpan(0, Length);
+           _data.AsSpan(0, (int)Length);
 
         public static implicit operator Span<byte>(IronCompressResult r) => r.AsSpan();
 
