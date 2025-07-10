@@ -25,6 +25,7 @@ if(MSVC AND CMAKE_BUILD_TYPE MATCHES Debug)
 endif()
 
 if(MSVC AND CMAKE_BUILD_TYPE MATCHES Release)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /guard:cf")
     add_link_options("/OPT:REF")
 endif()
 
