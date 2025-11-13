@@ -56,5 +56,8 @@ namespace IronCompress {
 
         [DllImport(LibName)]
         internal static extern IntPtr iron_version();
+
+        [DllImport(LibName)]
+        internal static extern string get_native_library_version(int codec);
     }
 }

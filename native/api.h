@@ -62,8 +62,15 @@ extern "C"
     EXPORTED bool iron_ping();
 
     /**
-     * @brief Returns the version of the library
+     * @brief Returns the version of this library
      * @return
      */
     EXPORTED const char* iron_version();
+
+    /**
+     * @brief Retrieves the native library version for the specified compression codec.
+     * @param codec The compression codec for which to obtain the native library version.
+     * @return A pointer to a null-terminated string containing the version of the native library for the specified codec. The string is owned by the library (do not modify or free). May be null if the version is unavailable.
+     */
+    EXPORTED const char* get_native_library_version(compression_codec codec);
 }

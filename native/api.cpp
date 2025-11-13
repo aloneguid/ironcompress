@@ -353,3 +353,22 @@ bool iron_ping() {
 const char* iron_version() {
     return IRON_VERSION;
 }
+
+const char* get_native_library_version(compression_codec codec) {
+    // It's generally hard to know which version of the native library we are using in runtime, unless a library exposes it's version via an API call. Hardcoding versions is not ideal, but better than nothing.
+
+    switch(codec) {
+        case compression_codec::snappy:
+            return "1.2.2";
+        case compression_codec::zstd:
+            return "1.5.7";
+        case compression_codec::brotli:
+            return "1.2.0";
+        case compression_codec::lzo:
+        case compression_codec::lz4:
+            return "1.10.0";
+
+    }
+
+    return nullptr;
+}
