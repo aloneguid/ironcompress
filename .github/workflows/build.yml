@@ -202,7 +202,7 @@ jobs:
           10.0.x
 
     - name: build
-      run: dotnet build managed/IronCompress.slnx -c release /p:Version=${{ env.VERSION }}$8,0 env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
+      run: dotnet build managed/IronCompress.slnx -c release /p:Version=${{ env.VERSION }}${{env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
     - name: debug2
       run: ls -R
