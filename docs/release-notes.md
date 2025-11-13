@@ -3,6 +3,7 @@
 - Add ` /guard:cf` by @johnthcall in #26.
 - Where possible, increase "buffer size" variable resolution to `int64_t` (#28).
 - Native and managed dependencies upgraded to the latest versions.
+- Added method to get native library version from C#.
 
 ## 1.6.3
 

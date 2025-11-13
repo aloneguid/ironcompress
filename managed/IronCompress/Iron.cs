@@ -50,8 +50,24 @@ namespace IronCompress {
             return Native.iron_is_supported((int)c);
         }
 
+        /// <summary>
+        /// Returns native library version string, or null if native library is not available
+        /// </summary>
+        /// <returns></returns>
         public static string? GetNativeVersion() {
             IntPtr ptr = Native.iron_version();
+            string? version = Marshal.PtrToStringAnsi(ptr);
+            return version;
+        }
+
+        /// <summary>
+        /// Retrieves the version string of the native library associated with the specified codec.
+        /// </summary>
+        /// <param name="codec">The codec for which to obtain the native library version.</param>
+        /// <returns>A string containing the version of the native library for the specified codec, or null if the version cannot
+        /// be determined.</returns>
+        public static string? GetNativeCodecVersion(Codec codec) {
+            IntPtr ptr = Native.get_native_library_version((int)codec);
             string? version = Marshal.PtrToStringAnsi(ptr);
             return version;
         }

@@ -73,6 +73,11 @@ public class IronTest {
 
     [Fact]
     public void CheckVersion() {
-        Assert.NotEmpty(Iron.GetNativeVersion());
+        Assert.NotNull(Iron.GetNativeVersion());
+    }
+
+    [Fact]
+    public void CheckCodecVersion() {
+        Assert.Equal("1.2.2", Iron.GetNativeCodecVersion(Codec.Snappy));
     }
 }

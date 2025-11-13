@@ -72,6 +72,11 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
+if(NOT DEFINED ENV{DOTNET_RID})
+    # Default to win-x64 if not defined, for local testing
+    set(ENV{DOTNET_RID} "win-x64")
+endif()
+
 # https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#generator-expression-reference
 add_custom_command(
     TARGET ${PROJECT_NAME} 
