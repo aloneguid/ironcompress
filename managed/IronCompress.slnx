@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../.github/workflows/build.yml" />
+    <File Path="../.github/workflows/prerelease.yml" />
+    <File Path="../.github/workflows/release.yml" />
+    <File Path="../docs/README.md" />
+    <File Path="../docs/release-notes.md" />
+  </Folder>
+  <Project Path="IronCompress.Benchmarks/IronCompress.Benchmarks.csproj" />
+  <Project Path="IronCompress.Test/IronCompress.Test.csproj" />
+  <Project Path="IronCompress/IronCompress.csproj" />
+</Solution>

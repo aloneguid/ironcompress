@@ -6,7 +6,7 @@ env:
   PACKAGE_SUFFIX: ''
   ASM_VERSION: 1.0.0
   BUILD_TYPE: Release
-  VCPKG_HASH: f33cc491c85a7d643c5ab6da1667c1458e6d7abf
+  VCPKG_HASH: 2d6a6cf3ac9a7cc93942c3d289a2f9c661a6f4a7
 
 on:
   push:
@@ -199,16 +199,17 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
+          10.0.x
 
     - name: build
-      run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
+      run: dotnet build managed/IronCompress.slnx -c release /p:Version=${{ env.VERSION }}$8,0 env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
     - name: debug2
       run: ls -R
       working-directory: .
 
     - name: Test
-      run: dotnet test managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
+      run: dotnet test managed/IronCompress.slnx -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
   build-managed:
     needs: make-fat-native
@@ -234,9 +235,10 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
+          10.0.x
 
     - name: Build
-      run: dotnet build managed/IronCompress.sln -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
+      run: dotnet build managed/IronCompress.slnx -c release /p:Version=${{ env.VERSION }}${{ env.PACKAGE_SUFFIX }} /p:FileVersion=$VERSION /p:AssemblyVersion=$ASM_VERSION
 
     - name: version
       run: echo $VERSION >> docs/version.txt
